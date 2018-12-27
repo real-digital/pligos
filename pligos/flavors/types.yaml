@@ -1,0 +1,60 @@
+tls:
+  key: string
+  crt: string
+
+secrets:
+  name: string
+  tls: tls
+  pullSecret: string
+
+image:
+  name: string
+  registry: string
+  tag: string
+  pullPolicy: string
+
+route:
+  name: string
+  type: string
+  port: numeric
+  containerPort: numeric
+  tls: bool
+  hostname: string
+
+container-mount:
+  name: string
+  containerPath: string
+
+container:
+  image: image
+  routes: mapped route
+  probes: probes
+  mounts: repeated container-mount
+  command: command
+
+command:
+  name: string
+  type: string
+  fileName: string
+  command: repeated string
+
+probe:
+  name: string
+  definition: object # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+
+probes:
+  readinessProbe: probe
+  livenessProbe: probe
+
+ingress:
+  name: string
+  enabled: bool
+  annotations: object
+
+rawValues:
+  name: string
+  values: object
+
+mount:
+  name: string
+  volume: object

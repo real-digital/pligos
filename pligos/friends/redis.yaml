@@ -1,0 +1,27 @@
+version: "1"
+name: redis
+credentials: {}
+config:
+  hostname: '{{ .Release.Name }}-{{ .Values.redis.nameOverride }}-master'
+  port: '{{ .Values.redis.master.service.port }}'
+values:
+  image:
+    pullPolicy: IfNotPresent
+  cluster:
+    enabled: false
+  usePassword: false
+  password: ~
+  master:
+    persistence:
+      enabled: false
+    port: 6379
+    podAnnotations:
+      sidecar.istio.io/inject: "false"
+    service:
+      type: NodePort
+      port: 6379
+chartReference:
+  name: 'redis'
+  version: '3.6.1'
+  repository: 'https://kubernetes-charts.storage.googleapis.com/'
+type: requirement

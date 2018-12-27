@@ -1,0 +1,88 @@
+{{- define "unmarshalJson" -}}
+	err = (configuration.Json{}).Unmarshal(
+		&{{ .Name }},
+		provider("{{ .ContainerPath }}", "{{ .FileName }}", "{{ .ChartPath }}" , configuration.{{ .ConfigType }})...,
+	)
+{{- end -}}
+
+{{- define "unmarshalYaml" -}}
+	err = (configuration.Yaml{}).Unmarshal(
+		&{{ .Name }},
+		provider("{{ .ContainerPath }}", "{{ .FileName }}", "{{ .ChartPath }}", configuration.{{ .ConfigType }})...,
+	)
+{{- end -}}
+
+{{- define "read" -}}
+	{{ .Name }}, err = configuration.GetData(
+		provider("{{ .ContainerPath }}", "{{ .FileName }}", "{{ .ChartPath }}", configuration.{{ .ConfigType }})...,
+	)
+{{- end -}}
+
+{{- define "errhandling" -}}
+if err != nil {
+  return Config{}, Secret{}, err
+}
+{{- end -}}
+
+package {{ .Package }}
+
+import "realcloud.tech/configuration"
+{{- if .HasStructuredConfig }}
+import "{{ .PackageRoot }}/{{ .Package }}/cfg"
+{{- end }}
+{{- if .HasStructuredSecret }}
+import "{{ .PackageRoot }}/{{ .Package }}/secret"
+{{- end }}
+
+type Config struct {
+{{- range .ConfigInstances }}
+	{{ .Name }} {{ .Type }}
+{{- end }}
+}
+
+type Secret struct {
+{{- range .SecretInstances }}
+	{{ .Name }} {{ .Type }}
+{{- end }}
+}
+
+func provider(containerPath, fileName, chartPath, configType string) []configuration.ConfigProvider {
+	provider := []configuration.ConfigProvider{configuration.NewFileProvider(containerPath)}
+
+	pligos, err := configuration.NewPligosProvider(configType, fileName, chartPath)
+	if err != nil {
+		return provider
+	}
+
+	return append(provider, pligos)
+}
+
+func GetConfiguration() (Config, Secret, error) {
+	var err error
+
+{{- range .ConfigInstances }}
+	var {{ .Name }} {{ .Type }}
+{{ if eq .ContentType "yaml" }}{{ template "unmarshalYaml" . }}{{ end }}
+{{ if eq .ContentType "json" }}{{ template "unmarshalJson" . }}{{ end }}
+{{ if eq .ContentType "binary" }}{{ template "read" . }}{{ end }}
+{{ template "errhandling" . }}
+{{- end }}
+
+{{- range .SecretInstances }}
+	var {{ .Name }} {{ .Type }}
+{{ if eq .ContentType "yaml" }}{{ template "unmarshalYaml" . }}{{ end }}
+{{ if eq .ContentType "json" }}{{ template "unmarshalJson" . }}{{ end }}
+{{ if eq .ContentType "binary" }}{{ template "read" . }}{{ end }}
+{{ template "errhandling" . }}
+{{- end }}
+
+	return Config{
+{{- range .ConfigInstances }}
+			{{ .Name }}: {{ .Name }},
+{{- end }}
+		}, Secret{
+{{- range .SecretInstances }}
+			{{ .Name }}: {{ .Name }},
+{{- end }}
+		}, nil
+}
