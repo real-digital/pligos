@@ -92,9 +92,6 @@ func newCompiler() (*compiler.Compiler, error) {
 	), nil
 }
 
-var contextName string
-
 func init() {
 	rootCmd.AddCommand(compileCmd)
-	compileCmd.Flags().StringVarP(&contextName, "context", "x", "", "which context to use")
 }

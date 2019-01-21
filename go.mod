@@ -25,5 +25,6 @@ require (
 	golang.org/x/sys v0.0.0-20190116161447-11f53e031339 // indirect
 	gopkg.in/yaml.v2 v2.2.2
 	k8s.io/apimachinery v0.0.0-20181227073029-9c4c36654334 // indirect
+	k8s.io/client-go v10.0.0+incompatible // indirect
 	k8s.io/helm v2.12.1+incompatible
 )
