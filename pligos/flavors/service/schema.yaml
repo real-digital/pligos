@@ -1,8 +1,0 @@
-context:
-  secrets: secrets
-  container: repeated container
-  ingress: ingress
-  rawValues: embedded rawValues.values
-  configPath: string
-  secretsPath: string
-  mounts: repeated mount

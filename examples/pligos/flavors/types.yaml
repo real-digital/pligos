@@ -1,0 +1,28 @@
+route:
+  name: string
+  port: string
+  containerPort: string
+  protocol: string
+
+image:
+  registry: string
+  repository: string
+  tag: string
+  pullPolicy: string
+
+command:
+  type: string
+  interpreter: repeated string
+  script: string
+
+probe:
+  definition: embedded object
+
+container:
+  name: string
+  routes: mapped route
+  image: image
+  command: command
+  probes:
+    livenessProbe: probe
+    readinessProbe: probe

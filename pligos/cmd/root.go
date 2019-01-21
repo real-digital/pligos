@@ -1,4 +1,4 @@
-// Copyright © 2018 real.digital
+// Copyright © 2019 real.digital
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,7 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
-	"path/filepath"
-
-	"gopkg.in/yaml.v2"
-
-	"realcloud.tech/tools/pkg/pligos"
 
 	"github.com/spf13/cobra"
 )
@@ -36,13 +30,18 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "pligos",
-	Short: "Pligos generates infrastructure and corresponding interface to your service",
-	Long: `All Pligos commands act on a single configuration (pligos.yaml) which
-defines the necessary properties to host your service.`,
+	Short: "A brief description of your application",
+	Long: `A longer description that spans multiple lines and likely contains
+examples and usage of using your application. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	// Uncomment the following line if your bare application
+	// has an action associated with it:
+	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -50,45 +49,8 @@ func Execute() {
 	}
 }
 
-func readPligosValues() (map[string]interface{}, error) {
-	valuesFile, err := ioutil.ReadFile(filepath.Join(pligosPath, "values.yaml"))
-	if err != nil {
-		return nil, err
-	}
-
-	var res map[string]interface{}
-	if err := yaml.Unmarshal(valuesFile, &res); err != nil {
-		return nil, err
-	}
-
-	return (&pligos.Normalizer{}).Normalize(res), nil
-}
-
-func readPligosConfig() (*pligos.PligosConfig, error) {
-	cfgFile, err := ioutil.ReadFile(filepath.Join(pligosPath, "pligos.yaml"))
-	if err != nil {
-		return nil, err
-	}
-
-	config := new(pligos.PligosConfig)
-	if err := yaml.Unmarshal(cfgFile, config); err != nil {
-		return nil, err
-	}
-	config.MakePathsAbsolute(pligosPath)
-
-	return config, nil
-}
-
-var pligosPath string
+var configPath string
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.pligos.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().StringVar(&pligosPath, "path", "", "path to pligos configuration")
+	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "", "path to pligos configuration")
 }

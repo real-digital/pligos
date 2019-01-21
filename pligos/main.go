@@ -1,4 +1,4 @@
-// Copyright © 2018 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2019 real.digital
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
 
 package main
 
-import "realcloud.tech/tools/pligos/cmd"
+import "realcloud.tech/cloud-tools/pligos/cmd"
 
 func main() {
 	cmd.Execute()

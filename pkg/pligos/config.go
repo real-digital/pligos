@@ -4,71 +4,71 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
+
+	"realcloud.tech/cloud-tools/pkg/maputil"
+	"realcloud.tech/cloud-tools/pkg/pathutil"
 )
 
 type PligosConfig struct {
-	Secrets      SecretsConfig       `yaml:"secrets"`
-	CodeGen      CodeGen             `yaml:"codeGen"`
-	Name         string              `yaml:"name"`
-	Description  string              `yaml:"description"`
-	ChartVersion string              `yaml:"chartVersion"`
-	FriendsDir   string              `yaml:"friendsLibrary"`
-	TaskDir      string              `yaml:"taskfile"`
-	Friends      map[string][]string `yaml:"friends"`
-	Contexts     []Context           `yaml:"contexts"`
-	Types        []string            `yaml:"types"`
+	Version string `yaml:"version"`
+
+	Path string `filepath:"resolve"`
+
+	DeploymentConfig DeploymentConfig `yaml:"deployment"`
+
+	Types []string `yaml:"types" filepath:"resolve"`
+
+	SecretsConfig SecretsConfig `yaml:"secrets"`
+
+	CodeGenConfig CodeGenConfig `yaml:"codeGen"`
+
+	Contexts []Context `yaml:"contexts"`
+
+	ChartDependencies        []map[string]interface{} `yaml:"chartDependencies"`
+	ApplicationConfiguration map[string]interface{}   `yaml:"applicationConfiguration"`
 }
 
-func (p *PligosConfig) MakePathsAbsolute(configPath string) error {
-	var absError error
-	f := func(p string) string {
-		abs, err := filepath.Abs(filepath.Join(configPath, p))
-		if err != nil {
-			absError = err
-			return ""
+func FindContext(name string, contexts []Context) Context {
+	for _, e := range contexts {
+		if e.Name == name {
+			return e
 		}
-
-		return abs
 	}
 
-	p.FriendsDir = f(p.FriendsDir)
-	p.TaskDir = f(p.TaskDir)
+	return Context{}
+}
 
-	for i := range p.Contexts {
-		for c := range p.Contexts[i].Configs {
-			p.Contexts[i].Configs[c] = f(p.Contexts[i].Configs[c])
-		}
-
-		for s := range p.Contexts[i].Secrets {
-			p.Contexts[i].Secrets[s] = f(p.Contexts[i].Secrets[s])
-		}
-
-		p.Contexts[i].Flavor = f(p.Contexts[i].Flavor)
-		p.Contexts[i].Output = f(p.Contexts[i].Output)
-	}
-
-	for i := range p.Types {
-		p.Types[i] = f(p.Types[i])
-	}
-
-	p.CodeGen.Config.Path = f(p.CodeGen.Config.Path)
-	p.CodeGen.Config.ChartPath = f(p.CodeGen.Config.ChartPath)
-
-	return absError
+type DeploymentConfig struct {
+	Name         string `yaml:"name"`
+	Description  string `yaml:"description"`
+	ChartVersion string `yaml:"chartVersion"`
 }
 
 type Context struct {
-	Name    string   `yaml:"name"`
-	Flavor  string   `yaml:"flavor"`
-	Output  string   `yaml:"output"`
-	Configs []string `yaml:"configs"`
-	Secrets []string `yaml:"secrets"`
+	Name    string         `yaml:"name"`
+	Flavor  string         `yaml:"flavor" filepath:"resolve"`
+	Configs []string       `yaml:"configs" filepath:"resolve"`
+	Secrets []string       `yaml:"secrets" filepath:"resolve"`
+	Friends []FriendConfig `yaml:"friends"`
 }
 
-type CodeGen struct {
+type FriendConfig struct {
+	PligosConfig string      `yaml:"path" filepath:"resolve"`
+	Context      string      `yaml:"context"`
+	Scope        FriendScope `yaml:"scope"`
+}
+
+type FriendScope string
+
+const (
+	Global = FriendScope("global")
+	Local  = FriendScope("local")
+)
+
+type CodeGenConfig struct {
 	Config struct {
-		Path        string `yaml:"path"`
+		Path        string `yaml:"path" filepath:"resolve"`
 		Package     string `yaml:"package"`
 		PackageRoot string `yaml:"packageRoot"`
 		ChartPath   string `yaml:"chartPath"`
@@ -77,7 +77,7 @@ type CodeGen struct {
 
 type SecretsConfig struct {
 	Provider string `yaml:"provider"`
-	Path     string `yaml:"path"`
+	Path     string `yaml:"path" filepath:"resolve"`
 }
 
 func mergeMaps(a, b map[string]interface{}) map[string]interface{} {
@@ -105,8 +105,23 @@ func CreateSchema(schemaPath string, types map[string]interface{}) (map[string]i
 		return nil, err
 	}
 
-	return (&Normalizer{}).Normalize(mergeMaps(types, schema)), nil
+	return (&maputil.Normalizer{}).Normalize(mergeMaps(types, schema)), nil
 
+}
+
+func OpenPligosConfig(path string) (PligosConfig, error) {
+	buf, err := ioutil.ReadFile(filepath.Join(path, "pligos.yaml"))
+	if err != nil {
+		return PligosConfig{}, err
+	}
+
+	var res PligosConfig
+	if err := yaml.Unmarshal(buf, &res); err != nil {
+		return PligosConfig{}, nil
+	}
+
+	pathutil.Resolve(&res, path)
+	return res, nil
 }
 
 func OpenTypes(types []string) (map[string]interface{}, error) {
@@ -125,5 +140,19 @@ func OpenTypes(types []string) (map[string]interface{}, error) {
 		res = mergeMaps(res, yml)
 	}
 
-	return (&Normalizer{}).Normalize(res), nil
+	return (&maputil.Normalizer{}).Normalize(res), nil
+}
+
+func OpenValues(valuesPath string) (map[string]interface{}, error) {
+	buf, err := ioutil.ReadFile(valuesPath)
+	if err != nil {
+		return nil, err
+	}
+
+	res := make(map[string]interface{})
+	if err := yaml.Unmarshal(buf, &res); err != nil {
+		return nil, err
+	}
+
+	return (&maputil.Normalizer{}).Normalize(res), nil
 }
