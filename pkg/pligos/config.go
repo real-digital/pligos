@@ -26,7 +26,6 @@ type PligosConfig struct {
 	Contexts []Context `yaml:"contexts"`
 
 	ChartDependencies        []map[string]interface{} `yaml:"chartDependencies"`
-	ApplicationConfiguration map[string]interface{}   `yaml:"applicationConfiguration"`
 }
 
 func FindContext(name string, contexts []Context) Context {

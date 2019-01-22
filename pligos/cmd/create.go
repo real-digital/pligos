@@ -60,7 +60,7 @@ func newHelm() (*helm.Helm, error) {
 	}
 
 	context := pligos.FindContext(contextName, config.Contexts)
-	return helm.New(context.Flavor, config.DeploymentConfig, config.ChartDependencies, c), nil
+	return helm.New(context.Flavor, config.DeploymentConfig, config.ChartDependencies, context.Configs, context.Secrets, c), nil
 }
 
 var chartPath string

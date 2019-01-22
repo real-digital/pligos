@@ -23,15 +23,18 @@ type Helm struct {
 	helmStarter *helmStarter
 	deploymentConfig pligos.DeploymentConfig
 	requirements []map[string]interface{}
+	configs, secrets []string
 
 	Compiler *compiler.Compiler
 }
 
-func New(flavor string, deploymentConfig pligos.DeploymentConfig, requirements []map[string]interface{}, compiler *compiler.Compiler) *Helm {
+func New(flavor string, deploymentConfig pligos.DeploymentConfig, requirements []map[string]interface{}, configs, secrets []string, compiler *compiler.Compiler) *Helm {
 	return &Helm{
 		helmStarter: &helmStarter{flavorDir: flavor},
 		requirements: requirements,
 		deploymentConfig: deploymentConfig,
+		configs: configs,
+		secrets: secrets,
 
 		Compiler: compiler,
 	}
@@ -67,6 +70,10 @@ func (h *Helm) create(path string) error {
 		return err
 	}
 
+	if err := h.copyConfiguration(path, append(h.configs, h.secrets...)); err != nil {
+		return err
+	}
+
 	return h.writeDependencies(path)
 }
 
@@ -79,6 +86,28 @@ func (h *Helm) writeValues(path string, values map[string]interface{}) error {
 	}
 
 	return ioutil.WriteFile(path, buf, os.FileMode(0644))
+}
+
+func (h *Helm) copyConfiguration(path string, files []string) error {
+	for _, e := range files {
+		i, err := os.Stat(filepath.Dir(e))
+		if err != nil {
+			return err
+		}
+
+		baseDir := filepath.Base(filepath.Dir(e))
+		file := filepath.Base(e)
+
+		if err := os.MkdirAll(filepath.Join(path, baseDir), i. Mode()); err != nil {
+			return err
+		}
+
+		if err := copy.Copy(e, filepath.Join(path, baseDir, file)); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (h *Helm) writeDescription(path string) error {

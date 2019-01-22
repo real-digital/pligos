@@ -8,11 +8,9 @@ deployment:
 types: ["../../flavors/types.yaml"]
 
 chartDependencies: []
-applicationConfiguration: {}
 
 contexts:
   - name: default
     flavor: ../../flavors/webservice
-    configs: []
-    secrets: []
-    friends: []
+    configs: ["config/app.yaml", "script/helloworld.sh"]
+    secrets: ["secrets/credentials.yaml"]
