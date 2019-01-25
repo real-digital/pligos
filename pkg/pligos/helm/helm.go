@@ -2,27 +2,24 @@ package helm
 
 import (
 	"io/ioutil"
-	"path/filepath"
 	"os"
 	"os/exec"
+	"path/filepath"
 
-	"realcloud.tech/cloud-tools/pkg/pligos/compiler"
 	"realcloud.tech/cloud-tools/pkg/pligos"
+	"realcloud.tech/cloud-tools/pkg/pligos/compiler"
 
 	"github.com/otiai10/copy"
-	"k8s.io/helm/pkg/helm/helmpath"
+	yaml "gopkg.in/yaml.v2"
 	"k8s.io/helm/pkg/helm/environment"
+	"k8s.io/helm/pkg/helm/helmpath"
 	"k8s.io/helm/pkg/proto/hapi/chart"
-	"gopkg.in/yaml.v2"
 )
 
-
-
-
 type Helm struct {
-	helmStarter *helmStarter
+	helmStarter      *helmStarter
 	deploymentConfig pligos.DeploymentConfig
-	requirements []map[string]interface{}
+	requirements     []map[string]interface{}
 	configs, secrets []string
 
 	Compiler *compiler.Compiler
@@ -30,11 +27,11 @@ type Helm struct {
 
 func New(flavor string, deploymentConfig pligos.DeploymentConfig, requirements []map[string]interface{}, configs, secrets []string, compiler *compiler.Compiler) *Helm {
 	return &Helm{
-		helmStarter: &helmStarter{flavorDir: flavor},
-		requirements: requirements,
+		helmStarter:      &helmStarter{flavorDir: flavor},
+		requirements:     requirements,
 		deploymentConfig: deploymentConfig,
-		configs: configs,
-		secrets: secrets,
+		configs:          configs,
+		secrets:          secrets,
 
 		Compiler: compiler,
 	}
@@ -51,9 +48,22 @@ func (h *Helm) create(path string) error {
 	}
 	defer h.helmStarter.clean()
 
-	cmd := exec.Command("helm", "create", "--starter", starter, path)
+	target, err := ioutil.TempDir("", "pligos")
+	if err != nil {
+		return err
+	}
+
+	defer os.RemoveAll(target)
+
+	target = filepath.Join(target, filepath.Base(path))
+
+	cmd := exec.Command("helm", "create", "--starter", starter, target)
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	if err := h.sync(target, path); err != nil {
 		return err
 	}
 
@@ -98,7 +108,7 @@ func (h *Helm) copyConfiguration(path string, files []string) error {
 		baseDir := filepath.Base(filepath.Dir(e))
 		file := filepath.Base(e)
 
-		if err := os.MkdirAll(filepath.Join(path, baseDir), i. Mode()); err != nil {
+		if err := os.MkdirAll(filepath.Join(path, baseDir), i.Mode()); err != nil {
 			return err
 		}
 
