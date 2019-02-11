@@ -23,7 +23,7 @@ spec:
       containers:
         {{- range $name, $container := .Values.container }}
         - name: {{ $name }}
-          image: image: "{{ .image.registry }}/{{ .image.repository }}:{{ .image.tag }}"
+          image: "{{ .image.registry }}/{{ .image.repository }}:{{ .image.tag }}"
           imagePullPolicy: {{ .image.pullPolicy }}
           command:
             {{- if eq "script" .command.type }}
@@ -34,9 +34,11 @@ spec:
           ports:
             {{- range $portName, $route := .routes }}
             - name: {{ $portName }}
-              port: {{ .containerPort }}
+              containerPort: {{ .containerPort }}
               protocol: {{ .protocol }}
             {{- end }}
+          {{- if .probes }}
           probes:
 {{ toYaml .probes | indent 12 }}
+          {{- end }}
         {{- end }}

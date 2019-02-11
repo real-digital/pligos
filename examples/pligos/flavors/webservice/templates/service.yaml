@@ -1,3 +1,4 @@
+{{- if .Values.routes }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,11 +8,15 @@ metadata:
     helm.sh/chart: {{ include "chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    spec:
-      type: {{ .Values.serviceType }}
-      ports:
-        {{- range $name, $route := .Values.routes }}
-        - port: {{ .containerPort }}
-          targetPort: {{ .port }}
-          name: {{ $name }}
-        {{- end }}
+spec:
+  selector:
+    app.kubernetes.io/name: {{ include "name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  type: {{ .Values.serviceType }}
+  ports:
+    {{- range $name, $route := .Values.routes }}
+    - port: {{ .port }}
+      targetPort: {{ .containerPort }}
+      name: {{ $name }}
+    {{- end }}
+{{- end }}

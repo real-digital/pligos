@@ -13,10 +13,10 @@ route:
 
 image:
   - name: golang
-    registry: dockerhub.io
+    registry: docker.io
     repository: golang
     tag: 1.11.4-alpine3.8
-    pullPolicy: Awlays
+    pullPolicy: Always
 
 command:
   - name: helloworld
