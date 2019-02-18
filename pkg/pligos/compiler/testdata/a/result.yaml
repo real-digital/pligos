@@ -1,5 +1,14 @@
 containers:
-- routes:
+- probes:
+    readinessProbe:
+      http:
+        path: /
+        port: 8080
+    livenessProbe:
+      http:
+        path: /
+        port: 8080
+  routes:
     http:
       containerPort: 22000
       hostname: identd.real-dev.de

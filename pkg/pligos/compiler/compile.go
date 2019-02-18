@@ -138,6 +138,16 @@ func (ve *Compiler) compile(schema map[string]interface{}, config map[string]int
 			continue
 		}
 
+		if _, ok := typ.(map[string]interface{}); ok {
+			next, err := ve.compile(schema[k].(map[string]interface{}), config[k].(map[string]interface{}))
+			if err != nil {
+				return nil, err
+			}
+
+			res[k] = next
+			continue
+		}
+
 		c, err := ve.resolveConfig(config[k], typ.(string))
 		if err != nil {
 			return nil, err
@@ -204,6 +214,7 @@ func (ve *Compiler) resolveTypeInstance(t, name string) (map[string]interface{},
 
 		configs, ok := v.([]map[string]interface{})
 		if !ok {
+			fmt.Printf("%T\n", v)
 			return nil, fmt.Errorf("bad configuration for type: %s", t)
 		}
 

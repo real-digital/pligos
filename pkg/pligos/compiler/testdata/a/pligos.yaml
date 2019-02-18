@@ -31,6 +31,13 @@ configuration:
     values:
       bar: baz
 
+probe:
+  - name: default
+    definition:
+      http:
+        path: /
+        port: 8080
+
 contexts:
   base:
     rawValues: default
@@ -38,6 +45,9 @@ contexts:
     mappedConfiguration: ["default"]
     ingress: default
     containers:
-      - routes:
+      - probes:
+          livenessProbe: default
+          readinessProbe: default
+        routes:
           - http
           - grpc

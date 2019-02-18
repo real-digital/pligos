@@ -1,6 +1,6 @@
 package compiler
 
-//go:generate go-bindata -pkg valuecodec testdata/...
+//go:generate go-bindata -pkg compiler testdata/...
 
 import (
 	"testing"

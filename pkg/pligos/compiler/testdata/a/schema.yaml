@@ -5,8 +5,14 @@ route:
   tls: bool
   hostname: string
 
+probe:
+  definition: embedded object
+
 container:
   routes: mapped route
+  probes:
+    livenessProbe: probe
+    readinessProbe: probe
 
 ingress:
   name: string
