@@ -59,7 +59,10 @@ func newHelm() (*helm.Helm, error) {
 		return nil, err
 	}
 
-	context := pligos.FindContext(contextName, config.Contexts)
+	context, ok := pligos.FindContext(contextName, config.Contexts)
+	if !ok {
+		return nil, fmt.Errorf("no such context: %s", contextName)
+	}
 	return helm.New(context.Flavor, config.DeploymentConfig, config.ChartDependencies, context.Configs, context.Secrets, c), nil
 }
 

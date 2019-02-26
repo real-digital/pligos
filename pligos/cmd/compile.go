@@ -67,7 +67,10 @@ func newCompiler() (*compiler.Compiler, error) {
 		return nil, err
 	}
 
-	context := pligos.FindContext(contextName, config.Contexts)
+	context, ok := pligos.FindContext(contextName, config.Contexts)
+	if !ok {
+		return nil, fmt.Errorf("no such context: %s", contextName)
+	}
 
 	types, err := pligos.OpenTypes(config.Types)
 	if err != nil {

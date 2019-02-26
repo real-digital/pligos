@@ -28,14 +28,14 @@ type PligosConfig struct {
 	ChartDependencies []map[string]interface{} `yaml:"chartDependencies"`
 }
 
-func FindContext(name string, contexts []Context) Context {
+func FindContext(name string, contexts []Context) (Context, bool) {
 	for _, e := range contexts {
 		if e.Name == name {
-			return e
+			return e, true
 		}
 	}
 
-	return Context{}
+	return Context{}, false
 }
 
 type DeploymentConfig struct {
