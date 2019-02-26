@@ -46,4 +46,7 @@ var contextName string
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "", "path to pligos configuration")
 	rootCmd.PersistentFlags().StringVarP(&contextName, "context", "x", "", "which context to use")
+
+	rootCmd.MarkFlagRequired("config")
+	rootCmd.MarkFlagRequired("context")
 }

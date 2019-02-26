@@ -24,8 +24,8 @@ import (
 	"fmt"
 	"os"
 
-	"realcloud.tech/cloud-tools/pkg/pligos/helm"
 	"realcloud.tech/cloud-tools/pkg/pligos"
+	"realcloud.tech/cloud-tools/pkg/pligos/helm"
 
 	"github.com/spf13/cobra"
 )
@@ -67,6 +67,7 @@ var chartPath string
 
 func init() {
 	createCmd.Flags().StringVarP(&chartPath, "output", "o", "", "output directory")
+	createCmd.MarkFlagRequired("output")
 
 	rootCmd.AddCommand(createCmd)
 }

@@ -187,7 +187,7 @@ container:
 ```
 
 Repeated allows specifying a list of any type. In the example we have
-a list of `container`, as well as a a property `command` which is a
+a list of `container`, as well as a property `command` which is a
 list of `string`. Next, beside lists, pligos also allows you to define
 maps.
 

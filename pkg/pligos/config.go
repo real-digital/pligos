@@ -25,7 +25,7 @@ type PligosConfig struct {
 
 	Contexts []Context `yaml:"contexts"`
 
-	ChartDependencies        []map[string]interface{} `yaml:"chartDependencies"`
+	ChartDependencies []map[string]interface{} `yaml:"chartDependencies"`
 }
 
 func FindContext(name string, contexts []Context) Context {
@@ -116,7 +116,7 @@ func OpenPligosConfig(path string) (PligosConfig, error) {
 
 	var res PligosConfig
 	if err := yaml.Unmarshal(buf, &res); err != nil {
-		return PligosConfig{}, nil
+		return PligosConfig{}, err
 	}
 
 	pathutil.Resolve(&res, path)
