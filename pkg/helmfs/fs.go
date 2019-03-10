@@ -8,10 +8,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"realcloud.tech/pligos/pkg/helm"
+
 	"bazil.org/fuse"
 	"bazil.org/fuse/fs"
 	yaml "gopkg.in/yaml.v2"
-	"realcloud.tech/cloud-tools/pkg/pligos/helm"
 )
 
 func New(chartName string, helmCreator func() *helm.Helm) *FileSystem {

@@ -25,9 +25,9 @@ import (
 	"log"
 	"os"
 
-	"realcloud.tech/cloud-tools/pkg/pligos"
-	"realcloud.tech/cloud-tools/pkg/pligos/helm"
-	"realcloud.tech/cloud-tools/pkg/pligos/helmfs"
+	"realcloud.tech/pligos/pkg/helm"
+	"realcloud.tech/pligos/pkg/helmfs"
+	"realcloud.tech/pligos/pkg/pligos"
 
 	"bazil.org/fuse"
 	"bazil.org/fuse/fs"
