@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"realcloud.tech/pligos/pkg/compiler"
 	"realcloud.tech/pligos/pkg/pligos"
-	"realcloud.tech/pligos/pkg/pligos/compiler"
 
 	"github.com/otiai10/copy"
 	yaml "gopkg.in/yaml.v2"
