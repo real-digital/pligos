@@ -24,8 +24,8 @@ import (
 	"fmt"
 	"os"
 
+	"realcloud.tech/pligos/pkg/helm"
 	"realcloud.tech/pligos/pkg/pligos"
-	"realcloud.tech/pligos/pkg/pligos/helm"
 
 	"github.com/spf13/cobra"
 )
