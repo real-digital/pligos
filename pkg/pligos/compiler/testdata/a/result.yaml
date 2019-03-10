@@ -1,0 +1,35 @@
+containers:
+- probes:
+    readinessProbe:
+      http:
+        path: /
+        port: 8080
+    livenessProbe:
+      http:
+        path: /
+        port: 8080
+  routes:
+    http:
+      containerPort: 22000
+      hostname: identd.real-dev.de
+      port: 80
+      tls: true
+      type: http
+    grpc:
+      containerPort: 22001
+      hostname: identd.real-dev.de
+      port: 90
+      tls: true
+      type: grpc
+ingress:
+  annotations:
+    foo: bar
+  enabled: true
+  name: default
+foo: bar
+repeatedConfiguration:
+  - foo: bar
+mappedConfiguration:
+  default:
+    foo: bar
+foo: bar

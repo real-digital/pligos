@@ -1,0 +1,22 @@
+{{- if .Values.routes }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "name" . }}
+    helm.sh/chart: {{ include "chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    app.kubernetes.io/name: {{ include "name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  type: {{ .Values.serviceType }}
+  ports:
+    {{- range $name, $route := .Values.routes }}
+    - port: {{ .port }}
+      targetPort: {{ .containerPort }}
+      name: {{ $name }}
+    {{- end }}
+{{- end }}

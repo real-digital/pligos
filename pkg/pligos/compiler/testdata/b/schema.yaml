@@ -1,0 +1,30 @@
+route:
+  type: string
+  port: numeric
+  containerPort: numeric
+  tls: bool
+  hostname: string
+
+container:
+  routes: mapped route
+
+ingress:
+  name: string
+  enabled: bool
+  annotations: object
+
+rawValues:
+  values: embedded object
+
+configuration:
+  values: embedded object
+
+service:
+  ingress: ingress
+  containers: repeated container
+  rawValues: embedded rawValues
+  repeatedConfiguration: repeated configuration
+  mappedConfiguration: mapped configuration
+
+context:
+  service: embedded mapped service

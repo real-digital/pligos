@@ -1,0 +1,44 @@
+{{ $root := . }}
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "name" . }}
+    helm.sh/chart: {{ include "chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        {{- range $name, $container := .Values.container }}
+        - name: {{ $name }}
+          image: "{{ .image.registry }}/{{ .image.repository }}:{{ .image.tag }}"
+          imagePullPolicy: {{ .image.pullPolicy }}
+          command:
+            {{- if eq "script" .command.type }}
+{{ toYaml .command.interpreter | indent 12 -}}
+            - |
+{{ $root.Files.Get "script/helloworld.sh" | indent 14 }}
+            {{- end }}
+          ports:
+            {{- range $portName, $route := .routes }}
+            - name: {{ $portName }}
+              containerPort: {{ .containerPort }}
+              protocol: {{ .protocol }}
+            {{- end }}
+          {{- if .probes }}
+          probes:
+{{ toYaml .probes | indent 12 }}
+          {{- end }}
+        {{- end }}
