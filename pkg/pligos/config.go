@@ -6,8 +6,8 @@ import (
 
 	yaml "gopkg.in/yaml.v2"
 
-	"realcloud.tech/cloud-tools/pkg/maputil"
-	"realcloud.tech/cloud-tools/pkg/pathutil"
+	"realcloud.tech/pligos/pkg/maputil"
+	"realcloud.tech/pligos/pkg/pathutil"
 )
 
 type PligosConfig struct {

@@ -28,8 +28,8 @@ import (
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
 
-	"realcloud.tech/cloud-tools/pkg/pligos"
-	"realcloud.tech/cloud-tools/pkg/pligos/compiler"
+	"realcloud.tech/pligos/pkg/compiler"
+	"realcloud.tech/pligos/pkg/pligos"
 )
 
 // compileCmd represents the compile command
