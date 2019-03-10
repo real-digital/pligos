@@ -20,7 +20,7 @@
 
 package main
 
-import "realcloud.tech/cloud-tools/pligos/cmd"
+import "realcloud.tech/pligos/cmd"
 
 func main() {
 	cmd.Execute()

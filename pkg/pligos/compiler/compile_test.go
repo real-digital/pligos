@@ -5,7 +5,7 @@ package compiler
 import (
 	"testing"
 
-	"realcloud.tech/cloud-tools/pkg/maputil"
+	"realcloud.tech/pligos/pkg/maputil"
 
 	"github.com/stretchr/testify/assert"
 	yaml "gopkg.in/yaml.v2"
