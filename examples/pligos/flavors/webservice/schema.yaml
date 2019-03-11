@@ -1,4 +1,8 @@
 context:
   routes: mapped route
+  initContainer: mapped container
   container: mapped container
   serviceType: string
+  configuration: embedded configuration
+  replicaCount: numeric
+  mounts: mapped mount

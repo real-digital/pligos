@@ -1,0 +1,26 @@
+{{- if .Values.routes }}
+{{- if .Values.hostname }}
+{{- $root := . -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "name" . }}
+    helm.sh/chart: {{ include "chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  tls: []
+  rules:
+  - host: {{ .Values.hostname }}
+    http:
+      paths:
+      {{- range $name, $route := .Values.routes }}
+      - path: {{ .path }}
+        backend:
+          serviceName: {{ include "fullname" $root }}
+          servicePort: {{ .port }}
+      {{- end }}
+{{- end }}
+{{- end }}
