@@ -3,6 +3,7 @@ route:
   port: string
   containerPort: string
   protocol: string
+  path: string
 
 image:
   registry: string
@@ -14,15 +15,27 @@ command:
   type: string
   interpreter: repeated string
   script: string
+  cmd: repeated string
 
 probe:
   definition: embedded object
 
+configuration:
+  values: embedded object
+
+mount:
+  definition: object
+  containerPath: string
+
+resource:
+  definition: object
+
 container:
-  name: string
   routes: mapped route
+  resource: resource
   image: image
   command: command
+  mounts: mapped mount
   probes:
     livenessProbe: probe
     readinessProbe: probe

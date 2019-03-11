@@ -8,5 +8,24 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-  routes.yaml: |
-{{ toYaml .Values | indent 4 }}
+{{ $root := . }}
+{{ range $path, $bytes := .Files.Glob "config/*" }}
+  {{ replace "config/" "" $path }}: |-
+{{ tpl ($root.Files.Get $path) $root | indent 4 }}
+{{ end }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "name" . }}
+    helm.sh/chart: {{ include "chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+type: Opaque
+data:
+{{- $root := .}}
+{{ range $path, $bytes := .Files.Glob "secrets/*" }}
+  {{ replace "secrets/" "" $path }}: {{ tpl ($root.Files.Get $path) $root | b64enc }}
+{{- end }}

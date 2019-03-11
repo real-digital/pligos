@@ -1,0 +1,16 @@
+version: "1"
+
+deployment:
+  name: gogetvanity
+  description: go-get-vanity Proxy
+  chartVersion: 1
+
+types: ["../../flavors/types.yaml"]
+
+chartDependencies: []
+
+contexts:
+  - name: default
+    flavor: "../../flavors/webservice"
+    configs: ["config/nginx.conf", "config/pligos.html"]
+    secrets: []

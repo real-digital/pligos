@@ -1,0 +1,15 @@
+{{- if .Files.Get "secrets/dockerconfig.json" }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "fullname" . }}-pullsecret
+  creationTimestamp: null
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: {{ .Files.Get "secrets/dockerconfig.json" | b64enc }}
+{{- end }}

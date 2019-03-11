@@ -1,0 +1,70 @@
+probe:
+  - name: nginx
+    definition:
+      httpGet:
+        path: /healthz
+        port: 80
+      initialDelaySeconds: 20
+      periodSeconds: 10
+
+route:
+  - name: http
+    containerPort: 80
+    port: 80
+    protocol: TCP
+    path: /pligos
+
+image:
+  - name: nginx
+    registry: docker.io
+    repository: nginx
+    tag: 1.15.9-alpine
+    pullPolicy: Always
+
+command: []
+
+mount:
+  - name: nginxconfig
+    containerPath: /etc/nginx
+    definition:
+      configMap:
+        name: '{{ template "fullname" . }}'
+        items:
+          - key: nginx.conf
+            path: nginx.conf
+  - name: vanityconfig
+    containerPath: /www/golang
+    definition:
+      configMap:
+        name: '{{ template "fullname" . }}'
+        items:
+          - key: pligos.html
+            path: pligos.html
+
+resource:
+  - name: default
+    definition:
+      requests:
+        cpu: 5m
+
+configuration:
+  - name: gogetvanity
+    values:
+      hostname: realcloud.tech
+
+container:
+  - name: nginx
+    image: nginx
+    resource: default
+    routes: ["http"]
+    mounts: ["nginxconfig", "vanityconfig"]
+    probes:
+      livenessProbe: nginx
+      readinessProbe: nginx
+
+contexts:
+  default:
+    container: ["nginx"]
+    mounts: ["nginxconfig", "vanityconfig"]
+    volumeClaims: ["datadir"]
+    routes: ["http"]
