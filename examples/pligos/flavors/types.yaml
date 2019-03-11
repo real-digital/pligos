@@ -3,6 +3,11 @@ route:
   port: string
   containerPort: string
   protocol: string
+  path: string
+
+pullSecret:
+  name: string
+  dockerconfig: string
 
 image:
   registry: string
@@ -14,15 +19,27 @@ command:
   type: string
   interpreter: repeated string
   script: string
+  cmd: repeated string
 
 probe:
   definition: embedded object
 
+configuration:
+  values: embedded object
+
+mount:
+  definition: object
+  containerPath: string
+
+computeResources:
+  definition: embedded object
+
 container:
-  name: string
   routes: mapped route
+  computeResources: computeResources
   image: image
   command: command
+  mounts: mapped mount
   probes:
     livenessProbe: probe
     readinessProbe: probe

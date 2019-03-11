@@ -1,4 +1,4 @@
-{{ $root := . }}
+{{- $root := . -}}
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
@@ -20,25 +20,32 @@ spec:
         app.kubernetes.io/name: {{ include "name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+
+      {{- if .Values.mounts }}
+      volumes:
+        {{- range $name, $mount := .Values.mounts }}
+        - name: {{ $name }}
+{{ tpl (toYaml .definition) $root | indent 10 }}
+        {{- end }}
+      {{- end }}
+
+      {{- if .Values.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.pullSecrets }}
+        - name: {{ template "fullname" $root }}-{{ .name }}
+      {{- end }}
+      {{- end }}
+
+      {{- if .Values.initContainer }}
+      initContainers:
+        {{- range $name, $container := .Values.initContainer }}
+        - name: {{ $name }}
+{{ include "container" (dict "c" $container "root" $root) | indent 10 }}
+        {{- end }}
+      {{- end }}
+
       containers:
         {{- range $name, $container := .Values.container }}
         - name: {{ $name }}
-          image: "{{ .image.registry }}/{{ .image.repository }}:{{ .image.tag }}"
-          imagePullPolicy: {{ .image.pullPolicy }}
-          command:
-            {{- if eq "script" .command.type }}
-{{ toYaml .command.interpreter | indent 12 -}}
-            - |
-{{ $root.Files.Get "script/helloworld.sh" | indent 14 }}
-            {{- end }}
-          ports:
-            {{- range $portName, $route := .routes }}
-            - name: {{ $portName }}
-              containerPort: {{ .containerPort }}
-              protocol: {{ .protocol }}
-            {{- end }}
-          {{- if .probes }}
-          probes:
-{{ toYaml .probes | indent 12 }}
-          {{- end }}
+{{ include "container" (dict "c" $container "root" $root) | indent 10 }}
         {{- end }}

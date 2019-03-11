@@ -1,0 +1,18 @@
+{{- if .Values.pullSecrets -}}
+{{- $root := . -}}
+{{- range .Values.pullSecrets }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "fullname" $root }}-{{ .name }}
+  creationTimestamp: null
+  labels:
+    app: {{ template "fullname" $root }}
+    chart: "{{ $root.Chart.Name }}-{{ $root.Chart.Version }}"
+    release: "{{ $root.Release.Name }}"
+    heritage: "{{ $root.Release.Service }}"
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: {{ $root.Files.Get .dockerconfig | b64enc }}
+{{- end }}
+{{- end }}
