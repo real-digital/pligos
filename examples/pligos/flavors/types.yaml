@@ -27,12 +27,12 @@ mount:
   definition: object
   containerPath: string
 
-resource:
-  definition: object
+computeResources:
+  definition: embedded object
 
 container:
   routes: mapped route
-  resource: resource
+  computeResources: computeResources
   image: image
   command: command
   mounts: mapped mount
