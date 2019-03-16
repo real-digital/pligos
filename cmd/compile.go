@@ -23,13 +23,9 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/spf13/cobra"
-	yaml "gopkg.in/yaml.v2"
-
-	"realcloud.tech/pligos/pkg/compiler"
-	"realcloud.tech/pligos/pkg/pligos"
+	"realcloud.tech/pligos/cmd/compile"
 )
 
 // compileCmd represents the compile command
@@ -39,60 +35,16 @@ var compileCmd = &cobra.Command{
 	Long: `This will compile your values.yaml based on the provided schema and
 pligos configuration.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := newCompiler()
-		if err != nil {
-			fmt.Fprintf(cmd.OutOrStderr(), "create compiler: %v\n", err)
-			os.Exit(1)
+		config := compile.Config{
+			ConfigPath:  configPath,
+			ContextName: contextName,
 		}
 
-		values, err := c.Compile()
-		if err != nil {
+		if err := compile.Compile(config); err != nil {
 			fmt.Fprintf(cmd.OutOrStderr(), "compile: %v\n", err)
 			os.Exit(1)
 		}
-
-		y, err := yaml.Marshal(values)
-		if err != nil {
-			fmt.Fprintf(cmd.OutOrStderr(), "stringify: %v\n", err)
-			os.Exit(1)
-		}
-
-		fmt.Println(string(y))
 	},
-}
-
-func newCompiler() (*compiler.Compiler, error) {
-	config, err := pligos.OpenPligosConfig(configPath)
-	if err != nil {
-		return nil, err
-	}
-
-	context, ok := pligos.FindContext(contextName, config.Contexts)
-	if !ok {
-		return nil, fmt.Errorf("no such context: %s", contextName)
-	}
-
-	types, err := pligos.OpenTypes(config.Types)
-	if err != nil {
-		return nil, err
-	}
-
-	schema, err := pligos.CreateSchema(filepath.Join(context.Flavor, "schema.yaml"), types)
-	if err != nil {
-		return nil, err
-	}
-
-	instanceConfiguration, err := pligos.OpenValues(filepath.Join(config.Path, "values.yaml"))
-	if err != nil {
-		return nil, err
-	}
-
-	return compiler.New(
-		instanceConfiguration["contexts"].(map[string]interface{})[contextName].(map[string]interface{}),
-		schema["context"].(map[string]interface{}),
-		schema,
-		instanceConfiguration,
-	), nil
 }
 
 func init() {

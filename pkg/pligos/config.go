@@ -38,6 +38,11 @@ func FindContext(name string, contexts []Context) (Context, bool) {
 	return Context{}, false
 }
 
+type Dependency struct {
+	Pligos  string `yaml:"pligos" filepath:"resolve"`
+	Context string `yaml:"context"`
+}
+
 type DeploymentConfig struct {
 	Name         string `yaml:"name"`
 	Description  string `yaml:"description"`
@@ -45,11 +50,12 @@ type DeploymentConfig struct {
 }
 
 type Context struct {
-	Name    string         `yaml:"name"`
-	Flavor  string         `yaml:"flavor" filepath:"resolve"`
-	Configs []string       `yaml:"configs" filepath:"resolve"`
-	Secrets []string       `yaml:"secrets" filepath:"resolve"`
-	Friends []FriendConfig `yaml:"friends"`
+	Name         string         `yaml:"name"`
+	Flavor       string         `yaml:"flavor" filepath:"resolve"`
+	Configs      []string       `yaml:"configs" filepath:"resolve"`
+	Secrets      []string       `yaml:"secrets" filepath:"resolve"`
+	Friends      []FriendConfig `yaml:"friends"`
+	Dependencies []Dependency   `yaml:"dependencies"`
 }
 
 type FriendConfig struct {

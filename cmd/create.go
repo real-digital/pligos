@@ -24,10 +24,8 @@ import (
 	"fmt"
 	"os"
 
-	"realcloud.tech/pligos/pkg/helm"
-	"realcloud.tech/pligos/pkg/pligos"
-
 	"github.com/spf13/cobra"
+	"realcloud.tech/pligos/cmd/create"
 )
 
 // createCmd represents the create command
@@ -35,35 +33,17 @@ var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "this command creates a helm chart",
 	Run: func(cmd *cobra.Command, args []string) {
-		h, err := newHelm()
-		if err != nil {
-			fmt.Fprintf(cmd.OutOrStderr(), "init helm: %v\n", err)
-			os.Exit(1)
+		config := create.Config{
+			ConfigPath:  configPath,
+			ContextName: contextName,
+			ChartPath:   chartPath,
 		}
 
-		if err := h.Create(chartPath); err != nil {
+		if err := create.Create(config); err != nil {
 			fmt.Fprintf(cmd.OutOrStderr(), "create: %v\n", err)
 			os.Exit(1)
 		}
 	},
-}
-
-func newHelm() (*helm.Helm, error) {
-	config, err := pligos.OpenPligosConfig(configPath)
-	if err != nil {
-		return nil, err
-	}
-
-	c, err := newCompiler()
-	if err != nil {
-		return nil, err
-	}
-
-	context, ok := pligos.FindContext(contextName, config.Contexts)
-	if !ok {
-		return nil, fmt.Errorf("no such context: %s", contextName)
-	}
-	return helm.New(context.Flavor, config.DeploymentConfig, config.ChartDependencies, context.Configs, context.Secrets, c), nil
 }
 
 var chartPath string

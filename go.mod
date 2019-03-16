@@ -1,6 +1,7 @@
 module realcloud.tech/pligos
 
 require (
+	bazil.org/fuse v0.0.0-20180421153158-65cc252bf669
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/Masterminds/semver v1.4.2 // indirect
 	github.com/Masterminds/sprig v2.16.0+incompatible // indirect
@@ -21,8 +22,8 @@ require (
 	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/stretchr/testify v1.2.2
 	golang.org/x/arch v0.0.0-20181203225421-5a4828bb7045 // indirect
-	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9 // indirect
-	golang.org/x/sys v0.0.0-20190116161447-11f53e031339 // indirect
+	golang.org/x/net v0.0.0-20190313220215-9f648a60d977 // indirect
+	golang.org/x/tools v0.0.0-20190315214010-f0bfdbff1f9c // indirect
 	gopkg.in/yaml.v2 v2.2.2
 	k8s.io/apimachinery v0.0.0-20181227073029-9c4c36654334 // indirect
 	k8s.io/client-go v10.0.0+incompatible // indirect
