@@ -4,18 +4,17 @@ import (
 	"context"
 	"encoding/base64"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"realcloud.tech/pligos/pkg/helm"
 
 	"bazil.org/fuse"
 	"bazil.org/fuse/fs"
 	yaml "gopkg.in/yaml.v2"
 )
 
-func New(chartName string, helmCreator func() *helm.Helm) *FileSystem {
+func New(chartName string, helmCreator func(path string) error) *FileSystem {
 	return &FileSystem{
 		helmCreator: helmCreator,
 		chartName:   chartName,
@@ -23,7 +22,7 @@ func New(chartName string, helmCreator func() *helm.Helm) *FileSystem {
 }
 
 type FileSystem struct {
-	helmCreator func() *helm.Helm
+	helmCreator func(path string) error
 	chartName   string
 }
 
@@ -37,7 +36,7 @@ func (f *FileSystem) buildConfigTree() (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if err := f.helmCreator().Create(filepath.Join(dir, f.chartName)); err != nil {
+	if err := f.helmCreator(filepath.Join(dir, f.chartName)); err != nil {
 		return nil, err
 	}
 
@@ -141,7 +140,8 @@ func (d *Dir) ReadDirAll(ctx context.Context) ([]fuse.Dirent, error) {
 
 	tree, err := d.buildConfigTree()
 	if err != nil {
-		return nil, err
+		log.Panic(err)
+		return nil, fuse.DefaultErrno
 	}
 
 	if d.isConfigRoot {

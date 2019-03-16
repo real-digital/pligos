@@ -22,16 +22,10 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
-	"realcloud.tech/pligos/pkg/helm"
-	"realcloud.tech/pligos/pkg/helmfs"
-	"realcloud.tech/pligos/pkg/pligos"
-
-	"bazil.org/fuse"
-	"bazil.org/fuse/fs"
 	"github.com/spf13/cobra"
+	"realcloud.tech/pligos/cmd/helmfs"
 )
 
 // helmfsCmd represents the helmfs command
@@ -44,40 +38,15 @@ which is typically mounted to a countainer inside Kubernetes can also be
 used locally. This supports local application development, by
 simulating the same configuration interface as inside the cluster.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := fuse.Mount(
-			mountpoint,
-			fuse.FSName("pligos-helmfs"),
-			fuse.LocalVolume(),
-			fuse.VolumeName("pligos-helmfs"),
-		)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer c.Close()
-
-		helmCreator := func() *helm.Helm {
-			h, err := newHelm()
-			if err != nil {
-				fmt.Fprintf(cmd.OutOrStderr(), "init helm: %v\n", err)
-				os.Exit(1)
-			}
-
-			return h
+		config := helmfs.Config{
+			MountPoint:  mountpoint,
+			ConfigPath:  configPath,
+			ContextName: contextName,
 		}
 
-		config, err := pligos.OpenPligosConfig(configPath)
-		if err != nil {
-			fmt.Fprintf(cmd.OutOrStderr(), "open pligos config: %v\n", err)
-		}
-
-		err = fs.Serve(c, helmfs.New(config.DeploymentConfig.Name, helmCreator))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		<-c.Ready
-		if err := c.MountError; err != nil {
-			log.Fatal(err)
+		if err := helmfs.HelmFS(config); err != nil {
+			fmt.Fprintf(cmd.OutOrStderr(), "helmfs: %v\n", err)
+			os.Exit(1)
 		}
 	},
 }
