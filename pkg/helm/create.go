@@ -73,6 +73,7 @@ func (c *Creator) Create(config pligos.CreateConfig) (*chart.Chart, error) {
 		}
 
 		path := strings.TrimPrefix(e, config.PligosPath)
+		path = strings.TrimLeft(path, "/")
 		updatedFiles = append(updatedFiles, &any.Any{TypeUrl: path, Value: buf})
 	}
 
