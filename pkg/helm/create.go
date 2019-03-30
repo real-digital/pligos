@@ -1,6 +1,10 @@
 package helm
 
 import (
+	"io/ioutil"
+	"strings"
+
+	"github.com/golang/protobuf/ptypes/any"
 	yaml "gopkg.in/yaml.v2"
 	"realcloud.tech/pligos/pkg/pligos"
 
@@ -52,6 +56,27 @@ func (c *Creator) Create(config pligos.CreateConfig) (*chart.Chart, error) {
 		updatedTemplates = append(updatedTemplates, &chart.Template{Name: template.Name, Data: newData})
 	}
 	base.Templates = updatedTemplates
+
+	updatedFiles := []*any.Any{}
+	for _, e := range base.Files {
+		if e.GetTypeUrl() == "schema.yaml" {
+			continue
+		}
+
+		updatedFiles = append(updatedFiles, e)
+	}
+
+	for _, e := range config.ConfigurationFiles {
+		buf, err := ioutil.ReadFile(e)
+		if err != nil {
+			return nil, err
+		}
+
+		path := strings.TrimPrefix(e, config.PligosPath)
+		updatedFiles = append(updatedFiles, &any.Any{TypeUrl: path, Value: buf})
+	}
+
+	base.Files = updatedFiles
 
 	values, err := config.Compiler.Compile()
 	if err != nil {

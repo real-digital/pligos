@@ -33,6 +33,7 @@ type CreateConfig struct {
 	ChartDependencies          []string
 	ConfigurationFiles         []string
 	Compiler                   *compiler.Compiler
+	PligosPath                 string
 
 	Dependencies []CreateConfig
 }

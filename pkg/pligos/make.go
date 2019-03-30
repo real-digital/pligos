@@ -96,6 +96,7 @@ func MakeCreateConfig(pligosPath string, contextName string) (CreateConfig, erro
 		Description: config.DeploymentConfig.Description,
 		Version:     config.DeploymentConfig.ChartVersion,
 
+		PligosPath:         pligosPath,
 		FlavorPath:         context.Flavor,
 		ChartDependencies:  chartDependencies,
 		ConfigurationFiles: append(context.Configs, context.Secrets...),
