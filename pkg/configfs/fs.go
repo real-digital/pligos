@@ -1,9 +1,8 @@
-package helmfs
+package configfs
 
 import (
 	"context"
 	"encoding/base64"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -12,9 +11,10 @@ import (
 	"bazil.org/fuse"
 	"bazil.org/fuse/fs"
 	yaml "gopkg.in/yaml.v2"
+	"k8s.io/helm/pkg/proto/hapi/chart"
 )
 
-func New(chartName string, helmCreator func(path string) error) *FileSystem {
+func New(chartName string, helmCreator func() *chart.Chart) *FileSystem {
 	return &FileSystem{
 		helmCreator: helmCreator,
 		chartName:   chartName,
@@ -22,7 +22,7 @@ func New(chartName string, helmCreator func(path string) error) *FileSystem {
 }
 
 type FileSystem struct {
-	helmCreator func(path string) error
+	helmCreator func() *chart.Chart
 	chartName   string
 }
 
@@ -31,21 +31,8 @@ func (f *FileSystem) Root() (fs.Node, error) {
 }
 
 func (f *FileSystem) buildConfigTree() (map[string]interface{}, error) {
-	dir, err := ioutil.TempDir("", "pligs-helmfs")
+	resources, err := template(f.helmCreator(), release)
 	if err != nil {
-		return nil, err
-	}
-
-	if err := f.helmCreator(filepath.Join(dir, f.chartName)); err != nil {
-		return nil, err
-	}
-
-	resources, err := template(filepath.Join(dir, f.chartName), release)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := os.RemoveAll(dir); err != nil {
 		return nil, err
 	}
 

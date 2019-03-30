@@ -1,4 +1,4 @@
-package helmfs
+package configfs
 
 import (
 	"fmt"
@@ -59,13 +59,7 @@ func findResourceName(kind configKind, manifest string) (string, error) {
 	return fmt.Sprintf("%s-%s", strings.ToLower(string(kind)), name), nil
 }
 
-func template(chartPath string, releaseName string, valueFiles ...string) (map[string]string, error) {
-	rawVals, err := vals(valueFiles)
-	if err != nil {
-		return nil, err
-	}
-	config := &chart.Config{Raw: string(rawVals), Values: map[string]*chart.Value{}}
-
+func template(c *chart.Chart, releaseName string) (map[string]string, error) {
 	options := chartutil.ReleaseOptions{
 		Name:      releaseName,
 		IsInstall: false,
@@ -79,12 +73,7 @@ func template(chartPath string, releaseName string, valueFiles ...string) (map[s
 		KubeVersion: chartutil.DefaultKubeVersion,
 	}
 
-	c, err := chartutil.Load(chartPath)
-	if err != nil {
-		return nil, err
-	}
-
-	vals, err := chartutil.ToRenderValuesCaps(c, config, options, caps)
+	vals, err := chartutil.ToRenderValuesCaps(c, nil, options, caps)
 	if err != nil {
 		return nil, err
 	}

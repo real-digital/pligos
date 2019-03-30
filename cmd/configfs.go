@@ -25,12 +25,12 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"realcloud.tech/pligos/cmd/helmfs"
+	"realcloud.tech/pligos/cmd/configfs"
 )
 
 // helmfsCmd represents the helmfs command
 var helmfsCmd = &cobra.Command{
-	Use:   "helmfs",
+	Use:   "configfs",
 	Short: "mount pligos configuration, secrets locally",
 	Long: `this allows mounting configurations, secrets foundin a
 pligos configuration to the local filesystem. This way configuration,
@@ -38,14 +38,14 @@ which is typically mounted to a countainer inside Kubernetes can also be
 used locally. This supports local application development, by
 simulating the same configuration interface as inside the cluster.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := helmfs.Config{
+		config := configfs.Config{
 			MountPoint:  mountpoint,
 			ConfigPath:  configPath,
 			ContextName: contextName,
 		}
 
-		if err := helmfs.HelmFS(config); err != nil {
-			fmt.Fprintf(cmd.OutOrStderr(), "helmfs: %v\n", err)
+		if err := configfs.ConfigFS(config); err != nil {
+			fmt.Fprintf(cmd.OutOrStderr(), "configfs: %v\n", err)
 			os.Exit(1)
 		}
 	},
