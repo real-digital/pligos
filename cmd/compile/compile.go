@@ -2,7 +2,6 @@ package compile
 
 import (
 	"fmt"
-	"path/filepath"
 
 	yaml "gopkg.in/yaml.v2"
 	"realcloud.tech/pligos/pkg/compiler"
@@ -35,35 +34,10 @@ func Compile(config Config) error {
 }
 
 func NewCompiler(configPath, contextName string) (*compiler.Compiler, error) {
-	config, err := pligos.OpenPligosConfig(configPath)
+	config, err := pligos.MakePligosConfig(configPath)
 	if err != nil {
 		return nil, err
 	}
 
-	context, ok := pligos.FindContext(contextName, config.Contexts)
-	if !ok {
-		return nil, fmt.Errorf("no such context: %s", contextName)
-	}
-
-	types, err := pligos.OpenTypes(config.Types)
-	if err != nil {
-		return nil, err
-	}
-
-	schema, err := pligos.CreateSchema(filepath.Join(context.Flavor, "schema.yaml"), types)
-	if err != nil {
-		return nil, err
-	}
-
-	instanceConfiguration, err := pligos.OpenValues(filepath.Join(config.Path, "values.yaml"))
-	if err != nil {
-		return nil, err
-	}
-
-	return compiler.New(
-		instanceConfiguration["contexts"].(map[string]interface{})[contextName].(map[string]interface{}),
-		schema["context"].(map[string]interface{}),
-		schema,
-		instanceConfiguration,
-	), nil
+	return pligos.MakeCompiler(config, contextName)
 }

@@ -2,12 +2,11 @@ package pligos
 
 import (
 	"io/ioutil"
-	"path/filepath"
 
 	yaml "gopkg.in/yaml.v2"
 
+	"realcloud.tech/pligos/pkg/compiler"
 	"realcloud.tech/pligos/pkg/maputil"
-	"realcloud.tech/pligos/pkg/pathutil"
 )
 
 type PligosConfig struct {
@@ -26,6 +25,16 @@ type PligosConfig struct {
 	Contexts []Context `yaml:"contexts"`
 
 	ChartDependencies []map[string]interface{} `yaml:"chartDependencies"`
+}
+
+type CreateConfig struct {
+	Name, Description, Version string
+	FlavorPath                 string
+	ChartDependencies          []string
+	ConfigurationFiles         []string
+	Compiler                   *compiler.Compiler
+
+	Dependencies []CreateConfig
 }
 
 func FindContext(name string, contexts []Context) (Context, bool) {
@@ -111,22 +120,6 @@ func CreateSchema(schemaPath string, types map[string]interface{}) (map[string]i
 	}
 
 	return (&maputil.Normalizer{}).Normalize(mergeMaps(types, schema)), nil
-
-}
-
-func OpenPligosConfig(path string) (PligosConfig, error) {
-	buf, err := ioutil.ReadFile(filepath.Join(path, "pligos.yaml"))
-	if err != nil {
-		return PligosConfig{}, err
-	}
-
-	var res PligosConfig
-	if err := yaml.Unmarshal(buf, &res); err != nil {
-		return PligosConfig{}, err
-	}
-
-	pathutil.Resolve(&res, path)
-	return res, nil
 }
 
 func OpenTypes(types []string) (map[string]interface{}, error) {
