@@ -73,7 +73,7 @@ func template(c *chart.Chart, releaseName string) (map[string]string, error) {
 		KubeVersion: chartutil.DefaultKubeVersion,
 	}
 
-	vals, err := chartutil.ToRenderValuesCaps(c, nil, options, caps)
+	vals, err := chartutil.ToRenderValuesCaps(c, c.Values, options, caps)
 	if err != nil {
 		return nil, err
 	}
