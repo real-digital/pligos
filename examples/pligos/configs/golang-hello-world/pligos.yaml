@@ -1,13 +1,6 @@
 version: "1"
 
-deployment:
-  name: golang-hello-world
-  description: a golang hello world example
-  chartVersion: 0.1.1
-
 types: ["../../flavors/types.yaml"]
-
-chartDependencies: []
 
 contexts:
   - name: default
