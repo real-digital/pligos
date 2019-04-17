@@ -22,15 +22,44 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
+	"realcloud.tech/pligos/pkg/applicationconfig"
+	"realcloud.tech/pligos/pkg/helmport"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "pligos",
 	Short: "scalable infrastructure management",
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			cmd.Usage()
+			return
+		}
+
+		contextName := args[0]
+		pligosConfig, err := applicationconfig.ReadPligosConfig(configPath, contextName)
+		if err != nil {
+			log.Fatalf("read pligos configuration: %v", err)
+		}
+
+		p, err := applicationconfig.Decode(pligosConfig)
+		if err != nil {
+			log.Fatalf("decode pligos config: %v", err)
+		}
+
+		c, err := helmport.Transform(p)
+		if err != nil {
+			log.Fatalf("decode pligos config: %v", err)
+		}
+
+		if err := helmport.SwitchContext(c, pligosConfig.Path); err != nil {
+			log.Fatalf("switch context: %v", err)
+		}
+	},
 }
 
 func Execute() {
@@ -41,12 +70,7 @@ func Execute() {
 }
 
 var configPath string
-var contextName string
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "", "path to pligos configuration")
-	rootCmd.PersistentFlags().StringVarP(&contextName, "context", "x", "", "which context to use")
-
-	rootCmd.MarkFlagRequired("config")
-	rootCmd.MarkFlagRequired("context")
+	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", ".", "path to pligos configuration")
 }
