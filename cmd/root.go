@@ -31,7 +31,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "pligos CONTEXT [flags]",
+	Use:   "pligos CONTEXT",
 	Short: "scalable infrastructure management",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
@@ -70,5 +70,5 @@ func Execute() {
 var configPath string
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", ".", "path to pligos configuration")
+	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", ".", "path to helm chart")
 }

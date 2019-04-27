@@ -65,10 +65,13 @@ func Decode(config PligosConfig) (pligos.Pligos, error) {
 	}
 
 	return pligos.Pligos{
-		Metadata:           c.Metadata,
-		ConfigurationFiles: c.GetFiles(),
-		Flavor:             flavor,
-		ChartDependencies:  chartDependencies,
+		Chart: &chart.Chart{
+			Metadata:     c.GetMetadata(),
+			Files:        c.GetFiles(),
+			Dependencies: c.GetDependencies(),
+		},
+
+		Flavor: flavor,
 
 		ContextSpec: config.Context.Spec,
 		Schema:      schema["context"].(map[string]interface{}),

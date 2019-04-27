@@ -81,8 +81,8 @@ func Transform(p pligos.Pligos) (*chart.Chart, error) {
 	return &chart.Chart{
 		Templates:    updatedTemplates,
 		Metadata:     p.Metadata,
-		Files:        append(p.Flavor.Files, p.ConfigurationFiles...),
+		Files:        append(p.Flavor.Files, p.Chart.Files...),
 		Values:       &chart.Config{Raw: string(valuesYAML)},
-		Dependencies: append(p.ChartDependencies, transformedDependencies...),
+		Dependencies: append(p.Chart.Dependencies, transformedDependencies...),
 	}, nil
 }
