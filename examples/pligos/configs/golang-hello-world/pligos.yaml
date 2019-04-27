@@ -1,51 +1,46 @@
-kind: pligos
-version: '1'
-types: [../../flavors/types.yaml]
-flavor: ../../flavors/webservice
+pligos:
+  version: '1'
+  types: [../../flavors/types.yaml]
 
----
+contexts:
+  default:
+    flavor: ../../flavors/webservice
+    spec:
+      routes: [http]
+      container: [helloworld]
+      serviceType: ClusterIP
 
-kind: context
-name: default
-flavor: ../../flavors/webservice
-spec:
-  routes: [http]
-  container: [helloworld]
-  serviceType: ClusterIP
+values:
+  probes:
+    - name: http
+      definition:
+        httpGet:
+          path: /
+          port: http
 
----
+  route:
+    - name: http
+      port: 80
+      containerPort: 32080
+      protocol: TCP
 
-kind: values
-probes:
-  - name: http
-    definition:
-      httpGet:
-        path: /
-        port: http
+  image:
+    - name: golang
+      registry: docker.io
+      repository: golang
+      tag: 1.11.4-alpine3.8
+      pullPolicy: Always
 
-route:
-  - name: http
-    port: 80
-    containerPort: 32080
-    protocol: TCP
+  command:
+    - name: helloworld
+      type: script
+      interpreter: [sh, -c]
+      script: helloworld.sh
 
-image:
-  - name: golang
-    registry: docker.io
-    repository: golang
-    tag: 1.11.4-alpine3.8
-    pullPolicy: Always
-
-command:
-  - name: helloworld
-    type: script
-    interpreter: [sh, -c]
-    script: helloworld.sh
-
-container:
-  - name: helloworld
-    routes: [http]
-    image: golang
-    livenessProbe: http
-    readinessProbe: http
-    command: helloworld
+  container:
+    - name: helloworld
+      routes: [http]
+      image: golang
+      livenessProbe: http
+      readinessProbe: http
+      command: helloworld

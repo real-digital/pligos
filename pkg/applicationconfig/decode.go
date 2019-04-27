@@ -12,7 +12,7 @@ import (
 )
 
 func Decode(config PligosConfig) (pligos.Pligos, error) {
-	flavor, err := chartutil.Load(config.Metadata.FlavorPath)
+	flavor, err := chartutil.Load(config.Context.FlavorPath)
 	if err != nil {
 		return pligos.Pligos{}, err
 	}
@@ -39,7 +39,7 @@ func Decode(config PligosConfig) (pligos.Pligos, error) {
 		return pligos.Pligos{}, err
 	}
 
-	schema, err := createSchema(filepath.Join(config.Metadata.FlavorPath, "schema.yaml"), types)
+	schema, err := createSchema(filepath.Join(config.Context.FlavorPath, "schema.yaml"), types)
 	if err != nil {
 		return pligos.Pligos{}, err
 	}

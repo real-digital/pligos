@@ -1,7 +1,6 @@
 package applicationconfig
 
 import (
-	"bytes"
 	"io/ioutil"
 	"path/filepath"
 
@@ -14,13 +13,13 @@ type PligosConfig struct {
 	Path     string `filepath:"resolve"`
 	Metadata Metadata
 	Context  Context
-	Values   map[string]interface{}
+
+	Values map[string]interface{}
 }
 
 type Metadata struct {
-	Version    string   `yaml:"version"`
-	Types      []string `yaml:"types"`
-	FlavorPath string   `yaml:"flavor" filepath:"resolve"`
+	Version string   `yaml:"version"`
+	Types   []string `yaml:"types"`
 }
 
 type Context struct {
@@ -36,55 +35,26 @@ type Dependency struct {
 }
 
 func ReadPligosConfig(pligosPath string, contextName string) (PligosConfig, error) {
-	pligosConfig, err := ioutil.ReadFile(filepath.Join(pligosPath, "pligos.yaml"))
+	configFile, err := ioutil.ReadFile(filepath.Join(pligosPath, "pligos.yaml"))
 	if err != nil {
 		return PligosConfig{}, err
 	}
 
-	res := PligosConfig{}
-
-	docs := bytes.Split(pligosConfig, []byte("---"))
-	for _, e := range docs {
-		kindProbe := struct {
-			Kind string `yaml:"kind"`
-		}{}
-
-		if err := yaml.Unmarshal(e, &kindProbe); err != nil {
-			return PligosConfig{}, err
-		}
-
-		switch kindProbe.Kind {
-		case "pligos":
-			var metadata Metadata
-			if err := yaml.Unmarshal(e, &metadata); err != nil {
-				return PligosConfig{}, err
-			}
-			res.Metadata = metadata
-		case "context":
-			var context Context
-			if err := yaml.Unmarshal(e, &context); err != nil {
-				return PligosConfig{}, err
-			}
-			if context.Name != contextName {
-				continue
-			}
-
-			context.Spec = (&maputil.Normalizer{}).Normalize(context.Spec)
-
-			res.Context = context
-		case "values":
-			var values map[string]interface{}
-			if err := yaml.Unmarshal(e, &values); err != nil {
-				return PligosConfig{}, err
-			}
-
-			delete(values, "kind")
-			res.Values = (&maputil.Normalizer{}).Normalize(values)
-		}
+	var applicationConfig struct {
+		Metadata Metadata               `yaml:"pligos"`
+		Contexts map[string]Context     `yaml:"contexts"`
+		Values   map[string]interface{} `yaml:"values"`
+	}
+	if err := yaml.Unmarshal(configFile, &applicationConfig); err != nil {
+		return PligosConfig{}, err
 	}
 
-	if res.Context.FlavorPath != "" {
-		res.Metadata.FlavorPath = res.Context.FlavorPath
+	(&maputil.Normalizer{}).Normalize(applicationConfig.Contexts[contextName].Spec)
+
+	res := PligosConfig{
+		Metadata: applicationConfig.Metadata,
+		Context:  applicationConfig.Contexts[contextName],
+		Values:   (&maputil.Normalizer{}).Normalize(applicationConfig.Values),
 	}
 
 	pathutil.Resolve(&res, pligosPath)
