@@ -31,7 +31,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "pligos",
+	Use:   "pligos CONTEXT [flags]",
 	Short: "scalable infrastructure management",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
