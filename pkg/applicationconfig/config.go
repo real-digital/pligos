@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	yaml "gopkg.in/yaml.v2"
-	"realcloud.tech/pligos/pkg/maputil"
 	"realcloud.tech/pligos/pkg/pathutil"
 )
 
@@ -19,7 +18,7 @@ type PligosConfig struct {
 
 type Metadata struct {
 	Version string   `yaml:"version"`
-	Types   []string `yaml:"types"`
+	Types   []string `yaml:"types" filepath:"resolve"`
 }
 
 type Context struct {
@@ -49,12 +48,10 @@ func ReadPligosConfig(pligosPath string, contextName string) (PligosConfig, erro
 		return PligosConfig{}, err
 	}
 
-	(&maputil.Normalizer{}).Normalize(applicationConfig.Contexts[contextName].Spec)
-
 	res := PligosConfig{
 		Metadata: applicationConfig.Metadata,
 		Context:  applicationConfig.Contexts[contextName],
-		Values:   (&maputil.Normalizer{}).Normalize(applicationConfig.Values),
+		Values:   applicationConfig.Values,
 	}
 
 	pathutil.Resolve(&res, pligosPath)

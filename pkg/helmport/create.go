@@ -32,7 +32,9 @@ func SwitchContext(c *chart.Chart, path string) error {
 	}
 
 	for _, e := range c.Dependencies {
-		chartutil.Save(e, filepath.Join(path, "charts"))
+		if _, err := chartutil.Save(e, filepath.Join(path, "charts")); err != nil {
+			return err
+		}
 	}
 
 	for _, e := range c.Templates {
