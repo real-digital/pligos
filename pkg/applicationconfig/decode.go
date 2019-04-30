@@ -10,6 +10,24 @@ import (
 	"k8s.io/helm/pkg/proto/hapi/chart"
 )
 
+func pligosGeneratedP(c *chart.Chart) bool {
+	for _, e := range c.Metadata.Keywords {
+		if e == "pligosgenerated" {
+			return true
+		}
+	}
+
+	return false
+}
+
+func tagPligosGenerated(c *chart.Chart) {
+	if pligosGeneratedP(c) {
+		return
+	}
+
+	c.Metadata.Keywords = append(c.Metadata.Keywords, "pligosgenerated")
+}
+
 func Decode(config PligosConfig) (pligos.Pligos, error) {
 	dependencies := make([]pligos.Pligos, 0, len(config.Context.Dependencies))
 	for _, e := range config.Context.Dependencies {
@@ -46,11 +64,22 @@ func Decode(config PligosConfig) (pligos.Pligos, error) {
 		return pligos.Pligos{}, err
 	}
 
+	filteredDependencies := []*chart.Chart{}
+	for _, e := range c.GetDependencies() {
+		if pligosGeneratedP(e) {
+			continue
+		}
+
+		filteredDependencies = append(filteredDependencies, e)
+	}
+
+	tagPligosGenerated(c)
+
 	return pligos.Pligos{
 		Chart: &chart.Chart{
 			Metadata:     c.GetMetadata(),
 			Files:        c.GetFiles(),
-			Dependencies: c.GetDependencies(),
+			Dependencies: filteredDependencies,
 		},
 
 		Flavor: flavor,

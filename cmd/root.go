@@ -52,7 +52,7 @@ var rootCmd = &cobra.Command{
 
 		c, err := helmport.Transform(p)
 		if err != nil {
-			log.Fatalf("decode pligos config: %v", err)
+			log.Fatalf("transform helm chart: %v", err)
 		}
 
 		if err := helmport.SwitchContext(c, pligosConfig.Path); err != nil {
