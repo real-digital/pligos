@@ -214,7 +214,6 @@ func (ve *Compiler) resolveTypeInstance(t, name string) (map[string]interface{},
 
 		configs, ok := v.([]map[string]interface{})
 		if !ok {
-			fmt.Printf("%T\n", v)
 			return nil, fmt.Errorf("bad configuration for type: %s", t)
 		}
 
