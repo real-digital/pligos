@@ -1,0 +1,39 @@
+version: 2
+jobs:
+
+
+
+  build:
+    docker: [{ image: circleci/golang:1.12 }]
+
+    working_directory: /go/pligos
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-pkg-cache
+
+      - run: go install realcloud.tech/pligos/...
+
+      - save_cache:
+          key: v1-pkg-cache
+          paths:
+            - /go/pkg
+
+
+  publish-github-release:
+    docker: [{ image: circleci/golang:1.8 }]
+    requires: [build]
+    steps:
+      - attach_workspace: {at: /go/bin }
+      - run:
+          name: Publish Release on GitHub
+          command: |
+
+            go get github.com/tcnksm/ghr
+
+            VERSION=test
+
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} /go/bin
