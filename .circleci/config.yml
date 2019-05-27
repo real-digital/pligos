@@ -1,39 +1,26 @@
 version: 2
 jobs:
 
-
-
   build:
-    docker: [{ image: circleci/golang:1.12 }]
-
+    docker:
+      - image: circleci/golang:1.12
     working_directory: /go/pligos
-
     steps:
       - checkout
-
-      - restore_cache:
-          keys:
-            - v1-pkg-cache
-
-      - run: go install realcloud.tech/pligos/...
-
-      - save_cache:
-          key: v1-pkg-cache
-          paths:
-            - /go/pkg
-
-
-  publish-github-release:
-    docker: [{ image: circleci/golang:1.8 }]
-    requires: [build]
-    steps:
-      - attach_workspace: {at: /go/bin }
+      - run: go get -u github.com/mitchellh/gox
+      - run: go get -u github.com/tcnksm/ghr
+      - run: go get -u github.com/stevenmatthewt/semantics
       - run:
-          name: Publish Release on GitHub
-          command: |
+          name: cross compile
+          command: gox -os="linux darwin windows" -arch="amd64 386" -output="dist/pligos_{{.OS}}_{{.Arch}}"
 
-            go get github.com/tcnksm/ghr
-
-            VERSION=test
-
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} /go/bin
+      - add_ssh_keys
+      - run:
+          name: create release
+          command: |-
+            tag=$(semantics --output-tag)
+            if [ "$tag" ]; then
+              ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $tag dist/
+            else
+              echo "The commit message(s) did not indicate a major/minor/patch version."
+            fi
