@@ -1,6 +1,5 @@
 version: 2
 jobs:
-
   build:
     docker:
       - image: circleci/golang:1.12
@@ -13,7 +12,6 @@ jobs:
       - run:
           name: cross compile
           command: gox -os="linux darwin windows" -arch="amd64 386" -output="dist/pligos_{{.OS}}_{{.Arch}}"
-
       - add_ssh_keys
       - run:
           name: create release
