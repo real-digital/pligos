@@ -11,14 +11,17 @@ jobs:
       - run: go get -u github.com/stevenmatthewt/semantics
       - run:
           name: cross compile
-          command: gox -os="linux darwin windows" -arch="amd64 386" -output="dist/pligos_{{.OS}}_{{.Arch}}"
+          command: gox -os="linux darwin windows" -arch="amd64 386" -output="dist/{{.OS}}/{{.Arch}}/pligos"
+
       - add_ssh_keys
       - run:
           name: create release
           command: |-
             tag=$(semantics --output-tag)
+            go run .circleci/package.go $tag
+
             if [ "$tag" ]; then
-              ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $tag dist/
+              ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $tag dist/build
             else
               echo "The commit message(s) did not indicate a major/minor/patch version."
             fi
