@@ -19,3 +19,19 @@ configs into any form necessary.
 So, what you will end up with is a small set of helm starters (in
 pligos lingua franca they are called flavors) and a pligos
 configuration for each service that map to these flavors.
+
+# Install
+
+## OSX
+
+```
+VERSION=$(curl -s https://api.github.com/repos/mooncamp/pligos/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+helm plugin install https://github.com/mooncamp/pligos/releases/download/${VERSION}/darwin_amd64_pligos.tar.gz
+```
+
+## Linux
+
+```
+VERSION=$(curl -s https://api.github.com/repos/mooncamp/pligos/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+helm plugin install https://github.com/mooncamp/pligos/releases/download/$VERSION/linux_amd64_pligos.tar.gz
+```

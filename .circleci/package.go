@@ -37,23 +37,29 @@ func build(releases []release, version string) error {
 		return err
 	}
 
-	plugin["version"] = version
-	pluginYaml, err = yaml.Marshal(plugin)
-	if err != nil {
-		return err
-	}
-
-	pluginDist := filepath.Join("dist", "plugin.yaml")
-	if err := ioutil.WriteFile(pluginDist, pluginYaml, 0644); err != nil {
-		return err
-	}
-
 	if err := os.MkdirAll(filepath.Join("dist", "build"), 0700); err != nil {
 		return err
 	}
 
 	for _, e := range releases {
-		d := filepath.Join("dist", "build", fmt.Sprintf("%s_%s_pligs.tar.gz", e.os, e.arch))
+		plugin["version"] = version
+		hook := fmt.Sprintf("chmod +x $HELM_PLUGIN_DIR/%s", filepath.Base(e.path))
+		plugin["hooks"] = map[string]string{
+			"install": hook,
+			"update":  hook,
+		}
+
+		pluginYaml, err = yaml.Marshal(plugin)
+		if err != nil {
+			return err
+		}
+
+		pluginDist := filepath.Join("dist", "plugin.yaml")
+		if err := ioutil.WriteFile(pluginDist, pluginYaml, 0644); err != nil {
+			return err
+		}
+
+		d := filepath.Join("dist", "build", fmt.Sprintf("%s_%s_pligos.tar.gz", e.os, e.arch))
 
 		if err := archiver.Archive([]string{e.path, pluginDist}, d); err != nil {
 			return err
