@@ -1,0 +1,5 @@
+name: pligos
+description: scalable kubernetes infrastructure management
+command: $HELM_PLUGIN_DIR/pligos
+ignoreFlags: false
+useTunnel: false
