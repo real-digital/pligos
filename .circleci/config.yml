@@ -17,7 +17,7 @@ jobs:
       - run:
           name: create release
           command: |-
-            tag=$(semantics --output-tag)
+            tag=$(semantics -output-tag -dry-run)
 
             if [ "$tag" ]; then
               go run .circleci/package.go $tag
