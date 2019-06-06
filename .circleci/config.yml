@@ -18,9 +18,9 @@ jobs:
           name: create release
           command: |-
             tag=$(semantics --output-tag)
-            go run .circleci/package.go $tag
 
             if [ "$tag" ]; then
+              go run .circleci/package.go $tag
               ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $tag dist/build
             else
               echo "The commit message(s) did not indicate a major/minor/patch version."
