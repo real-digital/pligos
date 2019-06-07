@@ -25,13 +25,11 @@ configuration for each service that map to these flavors.
 ## OSX
 
 ```
-VERSION=$(curl -s https://api.github.com/repos/real-digital/pligos/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
-helm plugin install https://github.com/real-digital/pligos/releases/download/${VERSION}/darwin_amd64_pligos.tar.gz
+helm plugin install https://github.com/real-digital/pligos/releases/latest/download/darwin_amd64_pligos.tar.gz
 ```
 
 ## Linux
 
 ```
-VERSION=$(curl -s https://api.github.com/repos/real-digital/pligos/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
-helm plugin install https://github.com/real-digital/pligos/releases/download/$VERSION/linux_amd64_pligos.tar.gz
+helm plugin install https://github.com/real-digital/pligos/releases/latest/download/linux_amd64_pligos.tar.gz
 ```
