@@ -82,8 +82,6 @@
     echo "configuration: { valuesyaml: embedded object }" > types.yaml
   #+end_src
 
-  #+RESULTS:
-
   I am again making use of the Pligos keyword /embedded/ here. Please
   go to the DSL documentation if you want to learn what it does.
 
@@ -110,10 +108,11 @@
   #+end_src
 
   In order to morph this beautiful helm chart to a Pligos capable one,
-  I propose to rename the =values.yaml= to something more useful:
+  I propose to replace the =values.yaml= with something more useful:
 
   #+begin_src sh
-    mv hello-world/values.yaml hello-world/pligos.yaml
+    rm hello-world/values.yaml
+    touch hello-world/pligos.yaml
   #+end_src
 
   =values.yaml= and our beloved =templates= will come back soon, but,
@@ -125,9 +124,12 @@
   #+end_src
 
   Let's start editing the =pligos.yaml=. At first we are going to add
-  a header to the file that defines some metadata:
+  a header to the file that defines some metadata which, most
+  importantly links to the types we just created:
 
   #+begin_src yaml
+    # hello-world/pligos.yaml
+
     pligos:
       version: '1'
       types: [../types.yaml]
@@ -148,14 +150,18 @@
   and production version. Doing this without Pligos normally requires
   managing multiple =values.yaml= files, each one overwriting a base
   =values.yaml= file. Using Pligos this nonsense can finally come to
-  an end because you can manage all the environments side by side
-  inside of one file. You will see how this scales (spoiler: this is
-  what type instances are for).
+  an end because you can manage all the versions side by side inside
+  of one file. You will see how this scales (spoiler: this is what
+  type instances are for).
 
   To ease into the concept let's create a single first context called
-  =default= in our =schema.yaml=:
+  =default= in our =pligos.yaml= which holds the configuration for a
+  default helm chart. Go ahead and copy this first context below the
+  metadata header we just defined:
 
   #+begin_src yaml
+    # hello-world/pligos.yaml
+
     contexts:
       default:
         flavor: ../webservice
@@ -174,23 +180,45 @@
               ingress: {enabled: false}
   #+end_src
 
-  Go ahead, add this context configuration under the header and remove
-  the rest of the helm =values.yaml= defaults.
+  Looks complicated? Thats ok, because that's not how you would
+  normally use Pligos. I only show you this to make clear how simple
+  it is to create a configuration instance. As you can see we can now
+  use a single context =default= that uses the =webservice= flavor we
+  created and references a =configuration= instance using the =values=
+  key. Why it uses the =values= key you ask? Well le'ts have a look
+  again at our schema definition:
 
-  Looks weird? Good, because that's not how you would normally use
-  Pligos. However we still created our first type instance of our
-  configuration type. If you now run pligos you will see the
-  =values.yaml= file as well as the templates reappear.
+  #+begin_src yaml
+    # webservice/schema.yaml
+
+    context:
+      values: embedded configuration
+  #+end_src
+
+  As you can see, the schema we created for the =webservice= Flavor
+  requires us to create a =configuration= instance under the =values=
+  key, it's as simple as that! And if we think back we can remember,
+  that the =valuesyaml= key is part of the =configuration= type.
+
+  Finally done with that, you can now run pligos for the first time
+  and will see the =values.yaml= file as well as the templates
+  reappear!
 
   #+begin_src
     helm pligos default -c hello-world
     cat hello-world/values.yaml
   #+end_src
 
-  Finally, let's create a named =configuration= instance and reference
-  it in our context.
+  I told you that normally you don't create configurations like
+  that. Let's try doing it the Pligos idiomatic way! I suggest that we
+  create a /named instance/ of the =configuration= type. Named
+  instances are defined under the =values= key which you define at the
+  root of the pligos.yaml. Go ahead and copy the following below the
+  context definition.
 
   #+begin_src yaml
+    # hello-world/pligos.yaml
+
     values:
       configuration:
         - name: default
@@ -210,6 +238,8 @@
   Now change your context definition to the following:
 
   #+begin_src yaml
+    # hello-world/pligos.yaml
+
     contexts:
       default:
         flavor: ../webservice
