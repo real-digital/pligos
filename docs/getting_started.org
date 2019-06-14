@@ -41,8 +41,11 @@
   #+end_Src
 
   Now, despite this being a chart we will never inject any values into
-  it, so let's remove the =values.yaml=. Tests is also something that
-  belongs on your chart, so get rid of those as well.
+  it (the reason is that this flavor is just considered to be a template
+  and all of our helm charts will be using this template and generating their own
+  values.yaml file), so let's remove the =values.yaml=. Tests is also
+  something that belongs to your specific chart, so get rid of those as
+  well.
 
   #+begin_src sh
     rm webservice/values.yaml
@@ -50,6 +53,8 @@
   #+end_src
 
   However we do need a =schema.yaml= that defines the schema of the chart.
+  So, let's create the =schema.yaml= file inside the =webservice= folder by
+  following command:
 
   #+begin_src sh
     echo "context: {values: embedded configuration}" > webservice/schema.yaml
@@ -76,7 +81,10 @@
   further kick the tires on this /getting started/. To learn more
   about how to define types and Pligos' DSL go to [[https://github.com/real-digital/pligos/wiki/Schema-Compiler][schema compiler]].
 
-  Alright, let's define our =configuration= type.
+  Alright, let's define our =configuration= type in the file named
+  =types.yaml=. You can create this file anywhere and use its path
+  accordingly in the further steps. I've created it outside of the
+  =webservice= folder.
 
   #+begin_src sh
     echo "configuration: { valuesyaml: embedded object }" > types.yaml
@@ -94,8 +102,9 @@
 * hello-world Pligos configuration
 
   As a helm plugin, every Pligos configuration naturally is also a
-  helm chart. I think we already mastered creating helm charts so this
-  one should be easy:
+  helm chart. We'll create our own helm chart and it will be using the
+  =webservice= as the template. I think we have already mastered creating
+  helm charts so this one should be easy:
 
   #+begin_src sh
     helm create hello-world
@@ -108,7 +117,9 @@
   #+end_src
 
   In order to morph this beautiful helm chart to a Pligos capable one,
-  I propose to replace the =values.yaml= with something more useful:
+  I propose to replace the =values.yaml= with something more useful.
+  Let's remove the =values.yaml= file and create the =pligos.yaml= file
+  inside the =hello-world=:
 
   #+begin_src sh
     rm hello-world/values.yaml
@@ -134,6 +145,11 @@
       version: '1'
       types: [../types.yaml]
   #+end_src
+
+  Have you noticed why I have given the path of =types.yaml= as
+  "../types.yaml" ?. This is because my =types.yaml= is outside of this
+  helm chart folder. But you can give the path of =types.yaml= according
+  to the location where you have created it in previous step.
 
   You might notice, that we can actually plug multiple type definition
   files into your Pligos configuration. Multiple files are simply
@@ -247,6 +263,37 @@
           values: default
   #+end_src
 
+  So, your =pligos.yaml= till this step will look like as following:
+
+  #+begin_src yaml
+
+  # hello-world/pligos.yaml
+
+  pligos:
+    version: '1'
+    types: [../types.yaml]
+
+  contexts:
+    default:
+      flavor: ../webservice
+      spec:
+          values: default
+  values:
+    configuration:
+      - name: default
+        valuesyaml:
+          image:
+            repository: nginx
+            tag: stable
+            pullPolicy: IfNotPresent
+
+          service:
+            type: ClusterIP
+            port: 80
+
+          ingress: {enabled: false}
+  #+end_src
+
   As you can see, instead of defining configuration instances inline,
   you can created named instances and reference them elsewhere. This
   actually introduces us to the concept of composition within
@@ -304,7 +351,7 @@
 
             ingress:
               enabled: true
-              hosts: [{host: pligos-dev.sh}]
+              hosts: [{host: pligos-dev.sh , paths: [ / ]}]
 
         - name: default
           valuesyaml:
@@ -319,7 +366,7 @@
 
             ingress:
               enabled: true
-              hosts: [{host: pligos.sh}]
+              hosts: [{host: pligos.sh , paths: [ / ]}]
 
               tls:
                 - secretName: pligos-tls
@@ -356,6 +403,7 @@
   the type:
 
   #+begin_src yaml
+    # webservice/schema.yaml
     context:
       values: embedded configuration
       ingress: ingress
@@ -365,6 +413,8 @@
   the nasty repetition. The end result should look like this:
 
   #+begin_src yaml
+    # hello-world/pligos.yaml
+    
     pligos:
       version: '1'
       types: [../types.yaml]
@@ -391,12 +441,12 @@
       ingress:
         - name: production
           enabled: true
-          hosts: [{host: pligos.sh}]
+          hosts: [{host: pligos.sh , paths: [ / ]}]
           tls: [production]
 
         - name: development
           enabled: true
-          hosts: [{host: pligos-dev.sh}]
+          hosts: [{host: pligos-dev.sh , paths: [ / ]}]
 
       configuration:
         - name: default
@@ -417,3 +467,12 @@
   instance as the ingress was the only distinguishable factor. Going
   further with this configuration style I can assure you that
   different environments can be defined much more easily and scalable.
+  
+  So, Congratulations you are done with it. Now, you can again just test to check if everything is working fine by using the Flavor. 
+  
+  #+begin_src
+    helm pligos default -c hello-world
+    helm upgrade --install hello-world ./hello-world
+  #+end_src
+  
+  
