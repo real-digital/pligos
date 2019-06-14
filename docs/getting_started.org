@@ -325,6 +325,8 @@
   configuration like this to support both environments:
 
   #+begin_src yaml
+    # hello-world/pligos.yaml
+
     contexts:
       development:
         flavor: ../webservice
@@ -381,6 +383,8 @@
   =types.yaml= to look like this:
 
   #+begin_src yaml
+    # types.yaml
+
     configuration:
       valuesyaml: embedded object
 
@@ -404,6 +408,7 @@
 
   #+begin_src yaml
     # webservice/schema.yaml
+
     context:
       values: embedded configuration
       ingress: ingress
