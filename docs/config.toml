@@ -1,0 +1,5 @@
+baseURL = "https://abdul-jabbar01.github.io/pligos/public/"
+languageCode = "en-us"
+title = "Pligos Documentation"
+theme = "hugo-theme-learn"
+enableEmoji = "true"

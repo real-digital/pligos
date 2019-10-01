@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Motivation on Pligos Documentation</title>
+    <link>https://abdul-jabbar01.github.io/pligos/public/motivation/</link>
+    <description>Recent content in Motivation on Pligos Documentation</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 30 Sep 2019 17:20:32 +0200</lastBuildDate>
+    
+	<atom:link href="https://abdul-jabbar01.github.io/pligos/public/motivation/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>
