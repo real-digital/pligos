@@ -39,7 +39,7 @@ Pligos supports the following basic types:
 - bool
 - object
 
-Want to see types.yaml in action? Have a look on our [getting-started]({{< ref "/getting-started/_index.md" >}}) guide
+Want to see types.yaml in action? Have a look on our [getting-started]({{< ref "/getting-started/_index.md#types" >}}) guide
 
 **Additionally** the language supports the following meta types which can be applied to any custom, or basic types:
 
