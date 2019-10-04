@@ -90,7 +90,7 @@ toc: true
   configuring your services in alignment of *your* organization's
   requirements. However I can make some broad guesses in order to
   further kick the tires on this /getting started/. To learn more
-  about how to define types and Pligos' DSL go to [schema compiler](/pligos-components/schema/).
+  about how to define types and Pligos' DSL go to [schema compiler]({{< ref "/pligos-components/schema/_index.md" >}}).
 
   Alright, let's define our `configuration` type in the file named
   `types.yaml`. You can create this file anywhere and use its path
@@ -102,7 +102,7 @@ toc: true
   ```
 
   I am again making use of the Pligos keyword /embedded/ here. Please
-  go to the DSL documentation ([schema compiler](/pligos-components/schema/)) if you want to learn what it does.
+  go to the DSL documentation ([schema compiler]({{< ref "/pligos-components/schema/_index.md" >}})) if you want to learn what it does.
 
   Alright, so we defined our configuration type! Congratulations, not
   that hard, right? It seems that a configuration instance needs to

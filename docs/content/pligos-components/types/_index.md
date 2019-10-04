@@ -39,7 +39,7 @@ Pligos supports the following basic types:
 - bool
 - object
 
-Want to see types.yaml in action? Have a look on our [getting-started](/getting-started/#types) guide
+Want to see types.yaml in action? Have a look on our [getting-started]({{< ref "/getting-started/_index.md" >}}) guide
 
 **Additionally** the language supports the following meta types which can be applied to any custom, or basic types:
 
@@ -48,4 +48,4 @@ Want to see types.yaml in action? Have a look on our [getting-started](/getting-
 - embedded
 - embedded mapped
 
-These types are explained with example in [schema compiler](/pligos-components/schema/#use-of-repeated-instance)
+These types are explained with example in [schema compiler]({{< ref "/pligos-components/schema/_index.md#use-of-repeated-instance" >}})
