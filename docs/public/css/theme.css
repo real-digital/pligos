@@ -629,12 +629,21 @@ code, kbd, pre, samp {
     font-size: 92%;
 }
 code {
-    border-radius: 2px;
-    white-space: nowrap;
+
+    padding: .15em .4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(27,31,35,.05);
+    border-radius: 3px;
+    border: 1px solid #ececec;
     color: #5e5e5e;
-    background: #FFF7DD;
-    border: 1px solid #fbf0cb;
-    padding: 0px 2px;
+
+    /*border-radius: 2px;*/
+    /*white-space: nowrap;*/
+    /*color: #5e5e5e;*/
+    /*background: #FFF7DD;*/
+    /*border: 1px solid #fbf0cb;*/
+    /*padding: 0px 2px;*/
 }
 code + .copy-to-clipboard {
     margin-left: -1px;
@@ -1136,5 +1145,11 @@ pre .copy-to-clipboard:hover {
 img[src$='#floatleft']
 {
     float:left;
-    display: block !important;
+    display: inline !important;
+}
+
+img[src$='#floatright']
+{
+    float:right;
+    display: inline !important;
 }

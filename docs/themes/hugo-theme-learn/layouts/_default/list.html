@@ -1,6 +1,9 @@
 {{ partial "header.html" . }}
 
+{{ partial "custom-toc.html" . }}
+
 {{ if eq .Kind "section" }}
+
 	{{ .Content }}
 {{end}}
 

@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="Hugo 0.58.2" />
-    <meta name="description" content="This article describes how we can use pligos to manage helm charts easily.">
+    <meta name="description" content="">
 
 
     <link rel="icon" href="/pligos/public/images/favicon.png" type="image/png">
 
-    <title>Pligos Documentation :: Pligos Documentation</title>
+    <title>Pligos Components :: Pligos Documentation</title>
 
     
     <link href="/pligos/public/css/nucleus.css?1570203174" rel="stylesheet">
@@ -35,7 +35,7 @@
     </style>
     
   </head>
-  <body class="" data-url="/pligos/public/">
+  <body class="" data-url="/pligos/public/pligos-components/">
     <nav id="sidebar" class="">
 
 
@@ -145,8 +145,8 @@
   
     
     <li data-nav-id="/pligos/public/pligos-components/" title="Pligos Components" class="dd-item 
-        
-        
+        parent
+        active
         
         ">
       <a href="/pligos/public/pligos-components/">
@@ -299,56 +299,162 @@
         <div id="overlay"></div>
         <div class="padding highlightable">
               
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            <a href='/pligos/public/'>Pligos Documentation</a> > Pligos Components
+          
+         
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
         <div id="head-tags">
         
         </div>
         
         <div id="body-inner">
           
+            <h1>
+              
+              Pligos Components
+            </h1>
+          
 
         
 
 
-<span id="sidebar-toggle-span">
-<a href="#" id="sidebar-toggle" data-sidebar-toggle=""><i class="fas fa-bars"></i> navigation</a>
-</span>
-
- 
 
 
-<h1>Pligos Documentation</h1>
 
-<h4 id="overview">Overview</h4>
 
-<p>Pligos allows you to navigate multiple services by making kubernetes
-infrastructure configuration scalable. Without pligos, the usual
-approach is to create a seperate helm chart for each service. While
-this definitely can scale for a small amount of services, maintaining
-<code>deployment, service, ingress, ...</code> templates for more than 5 helm
-charts can be <strong>burdensome</strong> and error prone.</p>
 
-<p>We observed that services, in it&rsquo;s core, often don&rsquo;t differ that
-much. You can find a set of configurations that need to be
-individually defined for each service, such as <code>images, routes,
-mounts, ...</code>, so why not standardize around these configuration types,
-while beeing disconnected from the underlying templates? This is why
-pligos let&rsquo;s you define these configuration types (<code>image, route,
-...</code>) and adds a schema language that allows you to compile those
-configs into any form necessary.</p>
 
-<p>So, what you will end up with is a small set of helm starters (in
-pligos lingua franca they are called flavors) and a pligos
-configuration for each service that map to these flavors.</p>
 
-<p>Pligos helps you to manage your deployment in multiple environments by specifying your configurations in a single file called <code>pligos.yaml</code>. By using pligos, you <strong><em>don&rsquo;t need to play</em></strong> with the files within <em>templates</em> folder. <strong><em>Neither</em></strong> you have to dig into the multiple <code>values.yaml</code> files. You&rsquo;ll design a generic <code>templates</code> folder (called as pligos flavor) in a way to meet most of your requirements for your multiple micro-services.</p>
 
-<p>Then for deploying a new micro-service, all you have to do is specify your values for local, staging, production or whatever, in pligos.yaml and you are good to go.</p>
 
-<p>It makes much easier for you to manage cloud infrastructure. For example, if you want to update the hostname for your ingress in future, you don&rsquo;t have to find and replace it from bunch of files. You just need to modify your pligos.yaml accordingly.</p>
 
-<p><img src="/pligos/public/what-is-pligos.jpg" alt="" /></p>
+
 	
-  
+
+
+
+
+
+
+<ul class="children children-h3">
+	
+
+	
+		
+			
+		
+	
+
+	
+
+	
+		
+	
+		
+			
+				
+					
+					
+
+<h3>
+<a href="/pligos/public/pligos-components/types/" >Types</a>
+</h3>
+
+				
+
+				
+			
+			
+		
+	
+		
+			
+				
+					
+					
+
+<h3>
+<a href="/pligos/public/pligos-components/schema/" >Schema Compiler</a>
+</h3>
+
+				
+
+				
+			
+			
+		
+	
+		
+			
+				
+					
+					
+
+<h3>
+<a href="/pligos/public/pligos-components/file-structure/" >File Structure</a>
+</h3>
+
+				
+
+				
+			
+			
+		
+	
+
+	
+</ul>
+
+
+
+
+
+
+
+
+
+<footer class=" footline" >
+	
+</footer>
+
         
         </div> 
         
@@ -431,6 +537,7 @@ configuration for each service that map to these flavors.</p>
             
                 
                     
+                    
                 
                 
 
@@ -445,6 +552,9 @@ configuration for each service that map to these flavors.</p>
             
             
                 
+                    
+                        
+                        
                     
                 
                 
@@ -517,8 +627,10 @@ configuration for each service that map to these flavors.</p>
 	 
 	 
 		
+			<a class="nav nav-prev" href="/pligos/public/getting-started/" title="Getting Started"> <i class="fa fa-chevron-left"></i></a>
 		
-			<a class="nav nav-next" href="/pligos/public/motivation/" title="Motivation" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+		
+			<a class="nav nav-next" href="/pligos/public/pligos-components/types/" title="Types" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
 		
 	
     </div>
@@ -548,4 +660,3 @@ configuration for each service that map to these flavors.</p>
 
   </body>
 </html>
-

@@ -7,10 +7,7 @@ weight: 1
 
 <h1>Pligos Documentation</h1>
 
-##### Author: Abdul Jabbar
-##### Created at: 19 Sep 2019
-
-### Overview
+#### Overview
 
 Pligos allows you to navigate multiple services by making kubernetes
 infrastructure configuration scalable. Without pligos, the usual
@@ -31,3 +28,11 @@ configs into any form necessary.
 So, what you will end up with is a small set of helm starters (in
 pligos lingua franca they are called flavors) and a pligos
 configuration for each service that map to these flavors.
+
+Pligos helps you to manage your deployment in multiple environments by specifying your configurations in a single file called `pligos.yaml`. By using pligos, you ***don't need to play*** with the files within *templates* folder. ***Neither*** you have to dig into the multiple `values.yaml` files. You'll design a generic `templates` folder (called as pligos flavor) in a way to meet most of your requirements for your multiple micro-services.
+
+Then for deploying a new micro-service, all you have to do is specify your values for local, staging, production or whatever, in pligos.yaml and you are good to go.
+
+It makes much easier for you to manage cloud infrastructure. For example, if you want to update the hostname for your ingress in future, you don't have to find and replace it from bunch of files. You just need to modify your pligos.yaml accordingly.
+
+![]({{< resource url="what-is-pligos.jpg" >}})

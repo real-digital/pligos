@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="Hugo 0.58.2" />
-    <meta name="description" content="This article describes how we can use pligos to manage helm charts easily.">
+    <meta name="description" content="">
 
 
     <link rel="icon" href="/pligos/public/images/favicon.png" type="image/png">
 
-    <title>Pligos Documentation :: Pligos Documentation</title>
+    <title>Schema Compiler :: Pligos Documentation</title>
 
     
     <link href="/pligos/public/css/nucleus.css?1570203174" rel="stylesheet">
@@ -35,7 +35,7 @@
     </style>
     
   </head>
-  <body class="" data-url="/pligos/public/">
+  <body class="" data-url="/pligos/public/pligos-components/schema/">
     <nav id="sidebar" class="">
 
 
@@ -145,7 +145,7 @@
   
     
     <li data-nav-id="/pligos/public/pligos-components/" title="Pligos Components" class="dd-item 
-        
+        parent
         
         
         ">
@@ -196,8 +196,8 @@
   
     
     <li data-nav-id="/pligos/public/pligos-components/schema/" title="Schema Compiler" class="dd-item 
-        
-        
+        parent
+        active
         
         ">
       <a href="/pligos/public/pligos-components/schema/">
@@ -299,56 +299,335 @@
         <div id="overlay"></div>
         <div class="padding highlightable">
               
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            <a href='/pligos/public/'>Pligos Documentation</a> > <a href='/pligos/public/pligos-components/'>Pligos Components</a> > Schema Compiler
+          
+         
+          
+         
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#use-of-repeated-instance">Use of <code>repeated</code> instance</a></li>
+<li><a href="#use-of-mapped-instance">Use of <code>mapped</code> instance</a></li>
+<li><a href="#use-of-embedded-instance">Use of <code>embedded</code> instance</a></li>
+<li><a href="#use-of-embedded-mapped-instance">Use of <code>embedded mapped</code> instance</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
         <div id="head-tags">
         
         </div>
         
         <div id="body-inner">
           
+            <h1>
+              
+              Schema Compiler
+            </h1>
+          
 
         
 
 
-<span id="sidebar-toggle-span">
-<a href="#" id="sidebar-toggle" data-sidebar-toggle=""><i class="fas fa-bars"></i> navigation</a>
-</span>
-
- 
 
 
-<h1>Pligos Documentation</h1>
 
-<h4 id="overview">Overview</h4>
 
-<p>Pligos allows you to navigate multiple services by making kubernetes
-infrastructure configuration scalable. Without pligos, the usual
-approach is to create a seperate helm chart for each service. While
-this definitely can scale for a small amount of services, maintaining
-<code>deployment, service, ingress, ...</code> templates for more than 5 helm
-charts can be <strong>burdensome</strong> and error prone.</p>
 
-<p>We observed that services, in it&rsquo;s core, often don&rsquo;t differ that
-much. You can find a set of configurations that need to be
-individually defined for each service, such as <code>images, routes,
-mounts, ...</code>, so why not standardize around these configuration types,
-while beeing disconnected from the underlying templates? This is why
-pligos let&rsquo;s you define these configuration types (<code>image, route,
-...</code>) and adds a schema language that allows you to compile those
-configs into any form necessary.</p>
 
-<p>So, what you will end up with is a small set of helm starters (in
-pligos lingua franca they are called flavors) and a pligos
-configuration for each service that map to these flavors.</p>
 
-<p>Pligos helps you to manage your deployment in multiple environments by specifying your configurations in a single file called <code>pligos.yaml</code>. By using pligos, you <strong><em>don&rsquo;t need to play</em></strong> with the files within <em>templates</em> folder. <strong><em>Neither</em></strong> you have to dig into the multiple <code>values.yaml</code> files. You&rsquo;ll design a generic <code>templates</code> folder (called as pligos flavor) in a way to meet most of your requirements for your multiple micro-services.</p>
 
-<p>Then for deploying a new micro-service, all you have to do is specify your values for local, staging, production or whatever, in pligos.yaml and you are good to go.</p>
 
-<p>It makes much easier for you to manage cloud infrastructure. For example, if you want to update the hostname for your ingress in future, you don&rsquo;t have to find and replace it from bunch of files. You just need to modify your pligos.yaml accordingly.</p>
 
-<p><img src="/pligos/public/what-is-pligos.jpg" alt="" /></p>
+
 	
-  
+
+<p>Pligos heavily relies on yaml configurations. In order to compile one set of configurations into different contexts (for example CI,dev,prod) pligos comes with it&rsquo;s own simple schema language to describe the context. The idea is to create a single helm starter that supports a big set of your services. Services than differ only in their templating input, or the {values.yaml,dependencies.yaml} files. Have a look at the examples in the <code>examples/</code> directory for a more comprehensive use-case.</p>
+
+<p>Pligos supports the following basic types: <code>string, numeric, bool, object.</code> Example:</p>
+
+<pre><code># schema.yaml
+context:
+  pullPolicy: string
+  useTLS: bool
+  applicationConfig: object
+  podInstances: numeric
+</code></pre>
+
+<pre><code># example/pligos.yaml -- this is your actual service configuration, define this for all your services individually
+contexts:
+  dev:
+    pullPolicy: Always
+    useTLS: true
+    applicationConfig:
+      fixture:
+        user: &quot;John Doe&quot;
+        balance: &quot;10$&quot;
+    podInstances: 1
+</code></pre>
+
+<pre><code># example/values.yaml -- this file will be generated by pligos
+pullPolicy: &quot;Always&quot;
+useTLS: true
+applicationConfig:
+  fixture:
+    user: &quot;John Doe&quot;
+    balance: &quot;10$&quot;
+podInstances: 1
+</code></pre>
+
+<p>As mentioned above pligos allows defining different contexts (dev, prod, &hellip;). Each context needs to be set under the <code>contexts</code> property in the service configuration.</p>
+
+<pre><code># schema.yaml -- the schema definition for the dev context
+context:
+  environment: string
+  srcPath: string
+</code></pre>
+
+<pre><code># example/pligos.yaml
+contexts:
+  dev:
+    environment: dev
+    srcPath: /home/johndoe/dev/src/
+  prod:
+    environment: prod
+    srcPath: /home/johndoe/prod/src/
+</code></pre>
+
+<p>Then running the pligos for <code>prod</code> will generate the following <code>values.yaml</code></p>
+
+<pre><code># example/values.yaml -- this file will be generated by pligos
+environment: prod
+srcPath: /home/johndoe/prod/src/
+</code></pre>
+
+<p>However the true power of pligos comes through custom types, which can be instantiated and composed in the service configuration.</p>
+
+<pre><code># schema.yaml
+route:
+  port: string
+
+container:
+  route: route
+
+context:
+  container: container
+</code></pre>
+
+<pre><code># example/pligos.yaml
+route:
+ - name: http
+   port: 80
+
+container:
+ - name: gowebservice
+   route: http
+
+contexts:
+  dev:
+    container: gowebservice
+
+</code></pre>
+
+<pre><code># helmcharts/example/values.yaml
+container:
+  route:
+    port: 80
+</code></pre>
+
+<p>Notice that in the service configuration the instances are referenced by their name. <code>name</code> is a special property in pligos which is used for referencering configuration instances (such as the gowebservice container) and <code>mapped types</code>. More to <code>mapped types</code> later.</p>
+
+<p>Additionally the language supports the meta types <code>repeated</code>, <code>mapped</code>, <code>embedded</code> and <code>embedded mapped</code> which can be applied to any custom, or basic types. Let&rsquo;s start with an example for <code>repeated</code> instances.</p>
+
+<h4 id="use-of-repeated-instance">Use of <code>repeated</code> instance</h4>
+
+<pre><code># schema.yaml
+container:
+  name: string
+  command: repeated string
+
+context:
+  container: repeated container
+</code></pre>
+
+<pre><code># example/pligos.yaml
+container:
+ - name: nginx
+   command: [&quot;nginx&quot;]
+ - name: php
+   command: [&quot;php-fpm&quot;]
+
+contexts:
+  dev:
+    container: [&quot;nginx&quot;, &quot;php&quot;]
+</code></pre>
+
+<pre><code># examples/values.yaml
+container:
+ - name: nginx
+   command:
+    - nginx
+ - name: php
+   command:
+    - php-fpm
+</code></pre>
+
+<p>Repeated allows specifying a list of any type. In the example we have a list of container, as well as a property <code>command</code> which is a list of <code>string</code>.</p>
+
+<h4 id="use-of-mapped-instance">Use of <code>mapped</code> instance</h4>
+
+<p>Next, beside lists, pligos also allows you to define maps.</p>
+
+<pre><code># schema.yaml
+route:
+  name: string
+  port: string
+  containerPort: string
+
+context:
+  routes: mapped route
+</code></pre>
+
+<pre><code># example/pligos.yaml
+route:
+ - name: http
+   port: 80
+   containerPort: 8080
+
+contexts:
+  dev:
+    routes: [&quot;http&quot;]
+</code></pre>
+
+<pre><code># example/values.yaml
+routes:
+  http:
+    port: 80
+    containerPort: 8080
+</code></pre>
+
+<p>Notice that, although the configuration defines an array of routes, pligos yields a map, as shown in the the output. Maps can be created using the <code>mapped</code> meta type.</p>
+
+<h4 id="use-of-embedded-instance">Use of <code>embedded</code> instance</h4>
+
+<p>Up until this point all custom types appeared under some key in the output. However, this is not always the desired behavior. In order to embed the types&rsquo; properties into the parent <code>embedded</code> types can be used.</p>
+
+<pre><code># schema.yaml
+rawValues:
+  values: embedded object
+
+context:
+  rawValues: embedded rawValues
+</code></pre>
+
+<pre><code># example/pligos.yaml
+rawValues:
+ - name: devenvironment
+   values:
+     mysql:
+       user: testuser
+       password: asdf
+
+contexts:
+  dev:
+    rawValues: devenvironment
+</code></pre>
+
+<pre><code># example/values.yaml
+mysql:
+  user: testuser
+  password: asdf
+</code></pre>
+
+<h4 id="use-of-embedded-mapped-instance">Use of <code>embedded mapped</code> instance</h4>
+
+<p>Similarly the instance can be embedded using any arbitrary key using <code>embedded mapped</code> types.</p>
+
+<pre><code># schema.yaml
+dependency:
+  port: string
+  hostname: string
+
+context:
+  dependencies: embedded mapped dependency
+</code></pre>
+
+<pre><code># example/pligos.yaml
+dependency:
+ - name: mysql
+   port: 3306
+   hostname: mysql
+
+contexts:
+  dev:
+    dependencies: [&quot;mysql&quot;]
+</code></pre>
+
+<pre><code># example/values.yaml
+mysql:
+  port: 3306
+  hostname: mysql
+</code></pre>
+
+<p>Just as with <code>mapped</code> types, the name property is used to embedd the type instance into the parent.</p>
+
+
+
+
+
+<footer class=" footline" >
+	
+</footer>
+
         
         </div> 
         
@@ -431,6 +710,7 @@ configuration for each service that map to these flavors.</p>
             
                 
                     
+                    
                 
                 
 
@@ -445,6 +725,9 @@ configuration for each service that map to these flavors.</p>
             
             
                 
+                    
+                        
+                        
                     
                 
                 
@@ -462,6 +745,7 @@ configuration for each service that map to these flavors.</p>
             
                 
                     
+                    
                 
                 
 
@@ -477,6 +761,9 @@ configuration for each service that map to these flavors.</p>
             
             
                 
+                    
+                        
+                        
                     
                 
                 
@@ -517,8 +804,10 @@ configuration for each service that map to these flavors.</p>
 	 
 	 
 		
+			<a class="nav nav-prev" href="/pligos/public/pligos-components/types/" title="Types"> <i class="fa fa-chevron-left"></i></a>
 		
-			<a class="nav nav-next" href="/pligos/public/motivation/" title="Motivation" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+		
+			<a class="nav nav-next" href="/pligos/public/pligos-components/file-structure/" title="File Structure" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
 		
 	
     </div>
@@ -548,4 +837,3 @@ configuration for each service that map to these flavors.</p>
 
   </body>
 </html>
-

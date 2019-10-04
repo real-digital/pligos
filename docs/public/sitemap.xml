@@ -3,56 +3,56 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/</loc>
+    <loc>/pligos/public/pligos-components/types/</loc>
+    <lastmod>2019-10-02T16:09:11+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/pligos/public/</loc>
     <lastmod>2019-09-30T17:32:22+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/summary/</loc>
-    <lastmod>2019-09-30T17:32:22+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/motivation/</loc>
+    <loc>/pligos/public/motivation/</loc>
     <lastmod>2019-09-30T17:20:32+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/installation/</loc>
-    <lastmod>2019-09-30T17:36:57+02:00</lastmod>
+    <loc>/pligos/public/pligos-components/schema/</loc>
+    <lastmod>2019-10-02T16:09:11+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/command/</loc>
-    <lastmod>2019-09-30T17:38:33+02:00</lastmod>
+    <loc>/pligos/public/basics/</loc>
+    <lastmod>2019-10-02T15:55:39+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/flavor/</loc>
-    <lastmod>2019-09-30T17:39:58+02:00</lastmod>
+    <loc>/pligos/public/pligos-components/file-structure/</loc>
+    <lastmod>2019-10-02T16:09:11+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/types/</loc>
-    <lastmod>2019-10-01T12:58:37+02:00</lastmod>
+    <loc>/pligos/public/getting-started/</loc>
+    <lastmod>2019-10-02T13:52:34+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/file-structure/</loc>
-    <lastmod>2019-09-30T17:40:44+02:00</lastmod>
+    <loc>/pligos/public/pligos-components/</loc>
+    <lastmod>2019-10-02T13:52:34+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/example/</loc>
+    <loc>/pligos/public/example/</loc>
     <lastmod>2019-10-01T13:26:58+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/categories/</loc>
+    <loc>/pligos/public/categories/</loc>
   </url>
   
   <url>
-    <loc>https://abdul-jabbar01.github.io/pligos/public/tags/</loc>
+    <loc>/pligos/public/tags/</loc>
   </url>
   
 </urlset>

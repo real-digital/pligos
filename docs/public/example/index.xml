@@ -2,13 +2,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Example on Pligos Documentation</title>
-    <link>https://abdul-jabbar01.github.io/pligos/public/example/</link>
+    <link>/pligos/public/example/</link>
     <description>Recent content in Example on Pligos Documentation</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 01 Oct 2019 13:26:58 +0200</lastBuildDate>
     
-	<atom:link href="https://abdul-jabbar01.github.io/pligos/public/example/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/pligos/public/example/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>

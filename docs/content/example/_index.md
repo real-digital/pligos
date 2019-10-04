@@ -1,11 +1,12 @@
 ---
 title: "Example"
 date: 2019-10-01T13:26:58+02:00
+weight: 5
 ---
 
 #### Example Using Pligos
 
-You can find an example at [this](https://github.com/real-digital/pligos/tree/master/examples/pligos/configs/golang-hello-world) repo 
+You can find a basic example of pligos at [this](https://github.com/real-digital/pligos/tree/master/examples/pligos/configs/golang-hello-world) repo 
 
 Clone the repo
 ```
@@ -25,15 +26,15 @@ The structure of this directory is as following:
 So, Run the pligos command. 
 
 ```
-#helm pligos CONTEXT_NAME -c PATH_OF_PLIGOS.YAML
+#helm pligos <context-name> -c <path-to-pligos.yaml>
 helm pligos default -c .
 ```
-**Note:** Please keep in mind that we're using here "default" because our `pligos.yaml` contains the context named "default".
+**Note:** Please keep in mind that we're using here `default` because our `pligos.yaml` contains the context named default.
 
 Now, you'll see that there is auto-generated `values.yaml` file and `templates` folder.
 ![]({{< resource url="example-directory-after-running-pligos.png" >}})
 
-So, now you can run your usual helm command to deploy this example.
+Then you can run your usual helm command to deploy this hello-world example.
 ```
-helm upgrade --install .
+helm upgrade --install hello-world .
 ```

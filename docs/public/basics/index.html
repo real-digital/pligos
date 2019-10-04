@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="Hugo 0.58.2" />
-    <meta name="description" content="This article describes how we can use pligos to manage helm charts easily.">
+    <meta name="description" content="">
 
 
     <link rel="icon" href="/pligos/public/images/favicon.png" type="image/png">
 
-    <title>Pligos Documentation :: Pligos Documentation</title>
+    <title>Basics :: Pligos Documentation</title>
 
     
     <link href="/pligos/public/css/nucleus.css?1570203174" rel="stylesheet">
@@ -35,7 +35,7 @@
     </style>
     
   </head>
-  <body class="" data-url="/pligos/public/">
+  <body class="" data-url="/pligos/public/basics/">
     <nav id="sidebar" class="">
 
 
@@ -101,8 +101,8 @@
   
     
     <li data-nav-id="/pligos/public/basics/" title="Basics" class="dd-item 
-        
-        
+        parent
+        active
         
         ">
       <a href="/pligos/public/basics/">
@@ -299,56 +299,132 @@
         <div id="overlay"></div>
         <div class="padding highlightable">
               
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            <a href='/pligos/public/'>Pligos Documentation</a> > Basics
+          
+         
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#command">Command</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
         <div id="head-tags">
         
         </div>
         
         <div id="body-inner">
           
+            <h1>
+              
+              Basics
+            </h1>
+          
 
         
 
 
-<span id="sidebar-toggle-span">
-<a href="#" id="sidebar-toggle" data-sidebar-toggle=""><i class="fas fa-bars"></i> navigation</a>
-</span>
-
- 
 
 
-<h1>Pligos Documentation</h1>
 
-<h4 id="overview">Overview</h4>
 
-<p>Pligos allows you to navigate multiple services by making kubernetes
-infrastructure configuration scalable. Without pligos, the usual
-approach is to create a seperate helm chart for each service. While
-this definitely can scale for a small amount of services, maintaining
-<code>deployment, service, ingress, ...</code> templates for more than 5 helm
-charts can be <strong>burdensome</strong> and error prone.</p>
 
-<p>We observed that services, in it&rsquo;s core, often don&rsquo;t differ that
-much. You can find a set of configurations that need to be
-individually defined for each service, such as <code>images, routes,
-mounts, ...</code>, so why not standardize around these configuration types,
-while beeing disconnected from the underlying templates? This is why
-pligos let&rsquo;s you define these configuration types (<code>image, route,
-...</code>) and adds a schema language that allows you to compile those
-configs into any form necessary.</p>
 
-<p>So, what you will end up with is a small set of helm starters (in
-pligos lingua franca they are called flavors) and a pligos
-configuration for each service that map to these flavors.</p>
 
-<p>Pligos helps you to manage your deployment in multiple environments by specifying your configurations in a single file called <code>pligos.yaml</code>. By using pligos, you <strong><em>don&rsquo;t need to play</em></strong> with the files within <em>templates</em> folder. <strong><em>Neither</em></strong> you have to dig into the multiple <code>values.yaml</code> files. You&rsquo;ll design a generic <code>templates</code> folder (called as pligos flavor) in a way to meet most of your requirements for your multiple micro-services.</p>
 
-<p>Then for deploying a new micro-service, all you have to do is specify your values for local, staging, production or whatever, in pligos.yaml and you are good to go.</p>
 
-<p>It makes much easier for you to manage cloud infrastructure. For example, if you want to update the hostname for your ingress in future, you don&rsquo;t have to find and replace it from bunch of files. You just need to modify your pligos.yaml accordingly.</p>
 
-<p><img src="/pligos/public/what-is-pligos.jpg" alt="" /></p>
+
 	
-  
+
+<h4 id="installation">Installation</h4>
+
+<p>Pligos installation is super easy. If you have already installed the helm (to install helm follow the instructions <a href="https://helm.sh/docs/using_helm/#installing-helm">here</a> ), then you can simply install pligos as <code>helm plugin</code> by following commands:</p>
+
+<p>For <strong>OSX</strong></p>
+
+<pre><code class="language-bash">helm plugin install https://github.com/real-digital/pligos/releases/latest/download/darwin_amd64_pligos.tar.gz
+</code></pre>
+
+<p>For <strong>Linux</strong></p>
+
+<pre><code class="language-bash">helm plugin install https://github.com/real-digital/pligos/releases/latest/download/linux_amd64_pligos.tar.gz
+</code></pre>
+
+<h4 id="command">Command</h4>
+
+<p>Pligos can be used by following command:</p>
+
+<pre><code class="language-bash">#It will render the pligos.yaml and generate the values.yaml
+#containing the configuration for &lt;context-name&gt; context
+#And it will also create templates folder with required
+#files (from flavor) automatically
+helm pligos &lt;context-name&gt; -c &lt;path-to-pligos.yaml&gt;
+
+#Example: Running pligos for local context
+helm pligos local -c /my-deployment
+
+</code></pre>
+
+<p>If you need some more help for using pligos, you can use the following command to get help about pligos.</p>
+
+<pre><code class="language-bash">helm pligos --help
+</code></pre>
+
+
+
+
+
+<footer class=" footline" >
+	
+</footer>
+
         
         </div> 
         
@@ -399,6 +475,7 @@ configuration for each service that map to these flavors.</p>
             
                 
                     
+                    
                 
                 
 
@@ -414,6 +491,9 @@ configuration for each service that map to these flavors.</p>
             
             
                 
+                    
+                        
+                        
                     
                 
                 
@@ -517,8 +597,10 @@ configuration for each service that map to these flavors.</p>
 	 
 	 
 		
+			<a class="nav nav-prev" href="/pligos/public/motivation/" title="Motivation"> <i class="fa fa-chevron-left"></i></a>
 		
-			<a class="nav nav-next" href="/pligos/public/motivation/" title="Motivation" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+		
+			<a class="nav nav-next" href="/pligos/public/getting-started/" title="Getting Started" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
 		
 	
     </div>
@@ -548,4 +630,3 @@ configuration for each service that map to these flavors.</p>
 
   </body>
 </html>
-
