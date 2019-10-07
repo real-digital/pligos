@@ -1,4 +1,4 @@
-baseURL = "/pligos/public/"
+baseURL = "/"
 languageCode = "en-us"
 title = "Pligos Documentation"
 theme = "hugo-theme-learn"

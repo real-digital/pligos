@@ -2,13 +2,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Types on Pligos Documentation</title>
-    <link>/pligos/public/pligos-components/types/</link>
+    <link>/pligos-components/types/</link>
     <description>Recent content in Types on Pligos Documentation</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 02 Oct 2019 16:09:11 +0200</lastBuildDate>
     
-	<atom:link href="/pligos/public/pligos-components/types/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/pligos-components/types/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>

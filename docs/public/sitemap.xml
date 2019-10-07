@@ -3,56 +3,56 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/pligos/public/pligos-components/types/</loc>
+    <loc>/pligos-components/schema/</loc>
     <lastmod>2019-10-02T16:09:11+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/pligos/public/</loc>
+    <loc>/</loc>
     <lastmod>2019-09-30T17:32:22+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/pligos/public/motivation/</loc>
+    <loc>/motivation/</loc>
     <lastmod>2019-09-30T17:20:32+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/pligos/public/pligos-components/schema/</loc>
+    <loc>/pligos-components/types/</loc>
     <lastmod>2019-10-02T16:09:11+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/pligos/public/basics/</loc>
+    <loc>/basics/</loc>
     <lastmod>2019-10-02T15:55:39+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/pligos/public/pligos-components/file-structure/</loc>
+    <loc>/pligos-components/file-structure/</loc>
     <lastmod>2019-10-02T16:09:11+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/pligos/public/getting-started/</loc>
+    <loc>/getting-started/</loc>
     <lastmod>2019-10-02T13:52:34+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/pligos/public/pligos-components/</loc>
+    <loc>/pligos-components/</loc>
     <lastmod>2019-10-02T13:52:34+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/pligos/public/example/</loc>
+    <loc>/example/</loc>
     <lastmod>2019-10-01T13:26:58+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/pligos/public/categories/</loc>
+    <loc>/categories/</loc>
   </url>
   
   <url>
-    <loc>/pligos/public/tags/</loc>
+    <loc>/tags/</loc>
   </url>
   
 </urlset>

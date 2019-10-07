@@ -1,10 +1,10 @@
 ---
 title: "Schema Compiler"
 date: 2019-10-02T16:09:11+02:00
-weight: 2
+weight: 1
 ---
 
-Pligos heavily relies on yaml configurations. In order to compile one set of configurations into different contexts (for example CI,dev,prod) pligos comes with it's own simple schema language to describe the context. The idea is to create a single helm starter that supports a big set of your services. Services than differ only in their templating input, or the {values.yaml,dependencies.yaml} files. Have a look at the examples in the `examples/` directory for a more comprehensive use-case.
+Pligos heavily relies on yaml configurations. In order to compile one set of configurations into different contexts (for example CI,dev,prod) pligos comes with it's own simple schema language to describe the context. The idea is to create a single helm starter that supports a big set of your services. Services than differ only in their templating input, or the {values.yaml,dependencies.yaml} files.
 
 Pligos supports the following basic types: `string, numeric, bool, object.` Example:
 
@@ -17,17 +17,22 @@ context:
   podInstances: numeric
 ```
 
+`contexts`, `flavor` and `spec` are reserved words in following pligos.yaml. You need to provide your schema configuration under `spec`.
+
 ```
 # example/pligos.yaml -- this is your actual service configuration, define this for all your services individually
 contexts:
   dev:
-    pullPolicy: Always
-    useTLS: true
-    applicationConfig:
-      fixture:
-        user: "John Doe"
-        balance: "10$"
-    podInstances: 1
+    # Path to flavor folder that contains schema.yaml and templates folder
+    flavor: ./flavor
+    spec:
+      pullPolicy: Always
+      useTLS: true
+      applicationConfig:
+        fixture:
+          user: "John Doe"
+          balance: "10$"
+      podInstances: 1
 ```
 
 ```
@@ -54,11 +59,15 @@ context:
 # example/pligos.yaml
 contexts:
   dev:
-    environment: dev
-    srcPath: /home/johndoe/dev/src/
+    flavor: ./flavor
+    spec:
+      environment: dev
+      srcPath: /home/johndoe/dev/src/
   prod:
-    environment: prod
-    srcPath: /home/johndoe/prod/src/
+    flavor: ./flavor
+    spec:
+      environment: prod
+      srcPath: /home/johndoe/prod/src/
 ```
 
 Then running the pligos for `prod` will generate the following `values.yaml`
@@ -70,7 +79,7 @@ srcPath: /home/johndoe/prod/src/
 ```
 
 
-However the true power of pligos comes through custom types, which can be instantiated and composed in the service configuration.
+However the true power of pligos comes through custom types, which can be instantiated and composed in the configuration.
 
 ```
 # schema.yaml
@@ -86,18 +95,21 @@ context:
 
 ```
 # example/pligos.yaml
-route:
- - name: http
-   port: 80
-
-container:
- - name: gowebservice
-   route: http
 
 contexts:
   dev:
-    container: gowebservice
+    flavor: ./flavor
+    spec:
+      container: gowebservice
+    
+values:
+  route:
+   - name: http
+     port: 80
 
+  container:
+   - name: gowebservice
+     route: http
 ```
 
 ```
@@ -107,7 +119,7 @@ container:
     port: 80
 ```
 
-Notice that in the service configuration the instances are referenced by their name. `name` is a special property in pligos which is used for referencering configuration instances (such as the gowebservice container) and `mapped types`. More to `mapped types` later.
+Notice that in the configuration, the instances are referenced by their name. `name` is a special property in pligos which is used for referencering configuration instances (such as the gowebservice container) and `mapped types`. More to `mapped types` later.
 
 Additionally the language supports the meta types `repeated`, `mapped`, `embedded` and `embedded mapped` which can be applied to any custom, or basic types. Let's start with an example for `repeated` instances.
 
@@ -125,15 +137,19 @@ context:
 
 ```
 # example/pligos.yaml
-container:
- - name: nginx
-   command: ["nginx"]
- - name: php
-   command: ["php-fpm"]
-
 contexts:
   dev:
-    container: ["nginx", "php"]
+    flavor: ./flavor
+    spec:
+      container: ["nginx", "php"]
+
+values:
+  container:
+   - name: nginx
+     command: ["nginx"]
+   - name: php
+     command: ["php-fpm"]
+
 ```
 
 ```
@@ -151,7 +167,7 @@ Repeated allows specifying a list of any type. In the example we have a list of 
 
 #### Use of `mapped` instance
 
-Next, beside lists, pligos also allows you to define maps.
+Next, Pligos also allows you to define maps.
 
 ```
 # schema.yaml
@@ -166,14 +182,18 @@ context:
 
 ```
 # example/pligos.yaml
-route:
- - name: http
-   port: 80
-   containerPort: 8080
-
 contexts:
   dev:
-    routes: ["http"]
+    flavor: ./flavor
+    spec:
+      routes: ["http"]
+
+values:
+  route:
+   - name: http
+     port: 80
+     containerPort: 8080
+
 ```
 
 ```
@@ -201,16 +221,19 @@ context:
 
 ```
 # example/pligos.yaml
-rawValues:
- - name: devenvironment
-   values:
-     mysql:
-       user: testuser
-       password: asdf
-
 contexts:
   dev:
-    rawValues: devenvironment
+    flavor: ./flavor
+    spec:
+      rawValues: devenvironment
+
+values:
+  rawValues:
+   - name: devenvironment
+     values:
+       mysql:
+         user: testuser
+         password: asdf
 ```
 
 ```
@@ -236,14 +259,17 @@ context:
 
 ```
 # example/pligos.yaml
-dependency:
- - name: mysql
-   port: 3306
-   hostname: mysql
-
 contexts:
   dev:
-    dependencies: ["mysql"]
+    flavor: ./flavor
+    spec:
+      dependencies: ["mysql"]
+    
+values:
+  dependency:
+   - name: mysql
+     port: 3306
+     hostname: mysql
 ```
 
 ```
