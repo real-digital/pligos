@@ -2,13 +2,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pligos Components on Pligos Documentation</title>
-    <link>/pligos-components/</link>
+    <link>/pligos/public/pligos-components/</link>
     <description>Recent content in Pligos Components on Pligos Documentation</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 02 Oct 2019 13:52:34 +0200</lastBuildDate>
     
-	<atom:link href="/pligos-components/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/pligos/public/pligos-components/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>
