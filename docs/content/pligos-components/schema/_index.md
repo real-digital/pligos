@@ -4,7 +4,7 @@ date: 2019-10-02T16:09:11+02:00
 weight: 1
 ---
 
-Pligos heavily relies on yaml configurations. In order to compile one set of configurations into different contexts (for example CI,dev,prod) pligos comes with it's own simple schema language to describe the context. The idea is to create a single helm starter that supports a big set of your services. Services than differ only in their templating input, or the {values.yaml,dependencies.yaml} files.
+Pligos heavily relies on yaml configurations. In order to compile one set of configurations into different contexts (for example CI,dev,prod) pligos comes with it's own simple schema language to describe the context. The idea is to create a single helm starter that supports a big set of your services. Services then differ only in their templating input (given in `pligos.yaml` file).
 
 Pligos supports the following basic types: `string, numeric, bool, object.` Example:
 
