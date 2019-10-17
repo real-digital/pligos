@@ -18,12 +18,12 @@ type PligosConfig struct {
 
 type Metadata struct {
 	Version string   `yaml:"version"`
-	Types   []string `yaml:"types" filepath:"resolve"`
+	Types   []string `yaml:"types"`
 }
 
 type Context struct {
 	Name         string                 `yaml:"name"`
-	FlavorPath   string                 `yaml:"flavor" filepath:"resolve"`
+	FlavorPath   string                 `yaml:"flavor"`
 	Dependencies []Dependency           `yaml:"dependencies"`
 	Spec         map[string]interface{} `yaml:"spec"`
 }
