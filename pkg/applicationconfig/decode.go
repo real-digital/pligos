@@ -1,7 +1,12 @@
 package applicationconfig
 
 import (
+	"fmt"
+	"github.com/mholt/archiver"
+	"os"
 	"path/filepath"
+	"realcloud.tech/pligos/pkg/downloader"
+	"realcloud.tech/pligos/pkg/pathutil"
 
 	"realcloud.tech/pligos/pkg/maputil"
 	"realcloud.tech/pligos/pkg/pligos"
@@ -44,9 +49,83 @@ func Decode(config PligosConfig) (pligos.Pligos, error) {
 		dependencies = append(dependencies, dependency)
 	}
 
+	//Remove the existing flavor folder if exists
+	if err := os.RemoveAll(filepath.Join(config.Path, "flavor")); err != nil {
+		return pligos.Pligos{}, err
+	}
+
+	flavorDirCreated := false
+	flavorsMainPath := filepath.Join(config.Path,"flavor")
+
+	//Check if the flavor path is url or local directory
+	if pathutil.IsValidUrl(config.Context.FlavorPath) {
+
+		fmt.Println("Flavor is hosted on remote location")
+
+		//Create flavor folder
+		if err := os.Mkdir(flavorsMainPath, 0700); err != nil {
+			return pligos.Pligos{}, err
+		}
+
+		flavorDirCreated = true
+
+		//Download compressed flavor file
+		downloadedFilePath,err := downloader.DownloadFile( flavorsMainPath, config.Context.FlavorPath)
+		if err != nil {
+			return pligos.Pligos{},err
+		}
+
+		//Unzip flavor file
+		err = archiver.Unarchive(downloadedFilePath, flavorsMainPath)
+
+		//Remove zipped file
+		if err := os.Remove(downloadedFilePath); err != nil {
+			return pligos.Pligos{},err
+		}
+
+		//Get the name of unzipped flavor folder
+		file, _ := os.Open(flavorsMainPath)
+		if err != nil {
+			return pligos.Pligos{},err
+		}
+
+		defer file.Close()
+
+		//Read only first directory within flavor folder
+		flavorDir,_ := file.Readdir(1)
+
+		//Update flavor path
+		config.Context.FlavorPath = filepath.Join(flavorsMainPath,flavorDir[0].Name())
+	}
+
 	flavor, err := chartutil.Load(config.Context.FlavorPath)
 	if err != nil {
 		return pligos.Pligos{}, err
+	}
+
+	for i := range config.Metadata.Types {
+
+		//Check if the type path is url or file
+		if pathutil.IsValidUrl(config.Metadata.Types[i]) {
+
+			//Check if flavor directory is already created
+			if(!flavorDirCreated){
+
+				if err := os.Mkdir(filepath.Join(config.Path, "flavor"), 0700); err != nil {
+					return pligos.Pligos{}, err
+				}
+				flavorDirCreated = true
+			}
+
+			fmt.Println("\nType is hosted on remote location")
+
+			downloadedFilePath, err := downloader.DownloadFile(flavorsMainPath, config.Metadata.Types[i])
+			if err != nil {
+				return pligos.Pligos{}, err
+			}
+
+			config.Metadata.Types[i] = downloadedFilePath
+		}
 	}
 
 	types, err := openTypes(config.Metadata.Types)

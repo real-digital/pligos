@@ -1,9 +1,20 @@
 package pathutil
 
 import (
+	"net/url"
 	"path/filepath"
 	"reflect"
 )
+
+// isValidUrl tests a string to determine if it is a well-structured url or not.
+func IsValidUrl(toTest string) bool {
+	_, err := url.ParseRequestURI(toTest)
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
+}
 
 func Resolve(in interface{}, root string) {
 	t := reflect.TypeOf(in).Elem()
