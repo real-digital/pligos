@@ -6,8 +6,8 @@ import (
 	"realcloud.tech/pligos/pkg/maputil"
 	"realcloud.tech/pligos/pkg/pligos"
 
-	"k8s.io/helm/pkg/chartutil"
-	"k8s.io/helm/pkg/proto/hapi/chart"
+	"helm.sh/helm/v3/pkg/chart"
+	"helm.sh/helm/v3/pkg/chart/loader"
 )
 
 func pligosGeneratedP(c *chart.Chart) bool {
@@ -44,7 +44,7 @@ func Decode(config PligosConfig) (pligos.Pligos, error) {
 		dependencies = append(dependencies, dependency)
 	}
 
-	flavor, err := chartutil.Load(config.Context.FlavorPath)
+	flavor, err := loader.Load(config.Context.FlavorPath)
 	if err != nil {
 		return pligos.Pligos{}, err
 	}
@@ -59,13 +59,13 @@ func Decode(config PligosConfig) (pligos.Pligos, error) {
 		return pligos.Pligos{}, err
 	}
 
-	c, err := chartutil.Load(config.Path)
+	c, err := loader.Load(config.Path)
 	if err != nil {
 		return pligos.Pligos{}, err
 	}
 
 	filteredDependencies := []*chart.Chart{}
-	for _, e := range c.GetDependencies() {
+	for _, e := range c.Dependencies() {
 		if pligosGeneratedP(e) {
 			continue
 		}
@@ -75,13 +75,14 @@ func Decode(config PligosConfig) (pligos.Pligos, error) {
 
 	tagPligosGenerated(c)
 
-	return pligos.Pligos{
-		Chart: &chart.Chart{
-			Metadata:     c.GetMetadata(),
-			Files:        c.GetFiles(),
-			Dependencies: filteredDependencies,
-		},
+	ch := &chart.Chart{
+		Metadata: c.Metadata,
+		Files:    c.Files,
+	}
+	ch.SetDependencies(filteredDependencies...)
 
+	return pligos.Pligos{
+		Chart:  ch,
 		Flavor: flavor,
 
 		ContextSpec: (&maputil.Normalizer{}).Normalize(config.Context.Spec),

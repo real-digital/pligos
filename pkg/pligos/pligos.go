@@ -1,7 +1,7 @@
 package pligos
 
 import (
-	"k8s.io/helm/pkg/proto/hapi/chart"
+	"helm.sh/helm/v3/pkg/chart"
 )
 
 type Pligos struct {
