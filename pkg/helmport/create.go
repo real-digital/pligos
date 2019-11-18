@@ -4,14 +4,15 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 
 	"realcloud.tech/pligos/pkg/compiler"
 	"realcloud.tech/pligos/pkg/pligos"
 
-	"k8s.io/helm/pkg/chartutil"
-	"k8s.io/helm/pkg/proto/hapi/chart"
+	"helm.sh/helm/v3/pkg/chart"
+	"helm.sh/helm/v3/pkg/chartutil"
 )
 
 func SwitchContext(c *chart.Chart, path string) error {
@@ -31,19 +32,23 @@ func SwitchContext(c *chart.Chart, path string) error {
 		return err
 	}
 
-	for _, e := range c.Dependencies {
+	for _, e := range c.Dependencies() {
 		if _, err := chartutil.Save(e, filepath.Join(path, "charts")); err != nil {
 			return err
 		}
 	}
 
 	for _, e := range c.Templates {
-		if err := ioutil.WriteFile(filepath.Join(path, e.GetName()), e.GetData(), 0644); err != nil {
+		if err := ioutil.WriteFile(filepath.Join(path, e.Name), e.Data, 0644); err != nil {
 			return err
 		}
 	}
 
-	return ioutil.WriteFile(filepath.Join(path, "values.yaml"), []byte(c.GetValues().GetRaw()), 0644)
+	bytes, err := yaml.Marshal(c.Values)
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(filepath.Join(path, "values.yaml"), bytes, 0644)
 }
 
 func Transform(p pligos.Pligos) (*chart.Chart, error) {
@@ -59,15 +64,10 @@ func Transform(p pligos.Pligos) (*chart.Chart, error) {
 		return nil, err
 	}
 
-	valuesYAML, err := yaml.Marshal(values)
-	if err != nil {
-		return nil, err
-	}
-
-	var updatedTemplates []*chart.Template
+	var updatedTemplates []*chart.File
 	for _, template := range p.Flavor.Templates {
-		newData := chartutil.Transform(string(template.Data), "<CHARTNAME>", p.Flavor.Metadata.Name)
-		updatedTemplates = append(updatedTemplates, &chart.Template{Name: template.Name, Data: newData})
+		newData := transform(string(template.Data), p.Flavor.Metadata.Name)
+		updatedTemplates = append(updatedTemplates, &chart.File{Name: template.Name, Data: newData})
 	}
 
 	transformedDependencies := make([]*chart.Chart, 0, len(p.Dependencies))
@@ -80,11 +80,19 @@ func Transform(p pligos.Pligos) (*chart.Chart, error) {
 		transformedDependencies = append(transformedDependencies, c)
 	}
 
-	return &chart.Chart{
-		Templates:    updatedTemplates,
-		Metadata:     p.Metadata,
-		Files:        append(p.Flavor.Files, p.Chart.Files...),
-		Values:       &chart.Config{Raw: string(valuesYAML)},
-		Dependencies: append(p.Chart.Dependencies, transformedDependencies...),
-	}, nil
+	ch := &chart.Chart{
+		Templates: updatedTemplates,
+		Metadata:  p.Metadata,
+		Files:     append(p.Flavor.Files, p.Chart.Files...),
+		Values:    values,
+	}
+
+	ch.SetDependencies(append(p.Chart.Dependencies(), transformedDependencies...)...)
+	return ch, nil
+}
+
+// transform performs a string replacement of the specified source for
+// a given key with the replacement string
+func transform(src, replacement string) []byte {
+	return []byte(strings.ReplaceAll(src, "<CHARTNAME>", replacement))
 }
