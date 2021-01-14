@@ -31,6 +31,7 @@ type Context struct {
 type Dependency struct {
 	PligosPath string `yaml:"path" filepath:"resolve"`
 	Context    string `yaml:"context"`
+	Alias      string `yaml:"alias"`
 }
 
 func ReadPligosConfig(pligosPath string, contextName string) (PligosConfig, error) {

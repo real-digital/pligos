@@ -72,9 +72,13 @@ func Transform(p pligos.Pligos) (*chart.Chart, error) {
 
 	transformedDependencies := make([]*chart.Chart, 0, len(p.Dependencies))
 	for _, e := range p.Dependencies {
-		c, err := Transform(e)
+		c, err := Transform(e.Pligos)
 		if err != nil {
 			return nil, err
+		}
+
+		if e.Alias != "" {
+			c.Metadata.Name = e.Alias
 		}
 
 		transformedDependencies = append(transformedDependencies, c)
