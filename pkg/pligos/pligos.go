@@ -13,5 +13,10 @@ type Pligos struct {
 	Types       map[string]interface{}
 	Instances   map[string]interface{}
 
-	Dependencies []Pligos
+	Dependencies []Dependency
+}
+
+type Dependency struct {
+	Alias  string
+	Pligos Pligos
 }

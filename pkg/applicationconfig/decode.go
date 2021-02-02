@@ -29,7 +29,7 @@ func tagPligosGenerated(c *chart.Chart) {
 }
 
 func Decode(config PligosConfig) (pligos.Pligos, error) {
-	dependencies := make([]pligos.Pligos, 0, len(config.Context.Dependencies))
+	dependencies := make([]pligos.Dependency, 0, len(config.Context.Dependencies))
 	for _, e := range config.Context.Dependencies {
 		dependencyConfig, err := ReadPligosConfig(e.PligosPath, e.Context)
 		if err != nil {
@@ -41,7 +41,7 @@ func Decode(config PligosConfig) (pligos.Pligos, error) {
 			return pligos.Pligos{}, err
 		}
 
-		dependencies = append(dependencies, dependency)
+		dependencies = append(dependencies, pligos.Dependency{Pligos: dependency, Alias: e.Alias})
 	}
 
 	flavor, err := loader.Load(config.Context.FlavorPath)
