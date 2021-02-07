@@ -33,3 +33,6 @@ helm plugin install https://github.com/real-digital/pligos/releases/latest/downl
 ```
 helm plugin install https://github.com/real-digital/pligos/releases/latest/download/linux_amd64_pligos.tar.gz
 ```
+# Documentation
+
+Complete documentation of pligos can be found [here](https://real-digital.github.io/pligos)

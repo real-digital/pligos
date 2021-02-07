@@ -1,0 +1,20 @@
+baseURL = "/pligos/public/"
+languageCode = "en-us"
+title = "Pligos Documentation"
+theme = "hugo-theme-learn"
+enableEmoji = "true"
+
+[params]
+themeVariant = "blue"
+disableToc = "false"
+chapter = false
+toc="true"
+
+[[menu.shortcuts]]
+name = "<i class='fab fa-github'></i> Github repo"
+identifier = "ds"
+url = "https://github.com/real-digital/pligos"
+weight = 10
+
+[outputs]
+home = [ "HTML", "RSS", "JSON"]

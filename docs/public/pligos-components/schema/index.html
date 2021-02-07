@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en" class="js csstransforms3d">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Hugo 0.58.2" />
+    <meta name="description" content="">
+
+
+    <link rel="icon" href="/pligos/public/images/favicon.png" type="image/png">
+
+    <title>Schema Compiler :: Pligos Documentation</title>
+
+    
+    <link href="/pligos/public/css/nucleus.css?1570791917" rel="stylesheet">
+    <link href="/pligos/public/css/fontawesome-all.min.css?1570791917" rel="stylesheet">
+    <link href="/pligos/public/css/hybrid.css?1570791917" rel="stylesheet">
+    <link href="/pligos/public/css/featherlight.min.css?1570791917" rel="stylesheet">
+    <link href="/pligos/public/css/perfect-scrollbar.min.css?1570791917" rel="stylesheet">
+    <link href="/pligos/public/css/auto-complete.css?1570791917" rel="stylesheet">
+    <link href="/pligos/public/css/atom-one-dark-reasonable.css?1570791917" rel="stylesheet">
+    <link href="/pligos/public/css/theme.css?1570791917" rel="stylesheet">
+    <link href="/pligos/public/css/hugo-theme.css?1570791917" rel="stylesheet">
+    
+      <link href="/pligos/public/css/theme-blue.css?1570791917" rel="stylesheet">
+    
+
+    <script src="/pligos/public/js/jquery-3.3.1.min.js?1570791917"></script>
+
+    <style>
+      :root #header + #content > #left > #rlblock_left{
+          display:none !important;
+      }
+      
+    </style>
+    
+  </head>
+  <body class="" data-url="/pligos/public/pligos-components/schema/">
+    <nav id="sidebar" class="">
+
+
+
+  <div id="header-wrapper">
+    <div id="header">
+      <a id="logo" href="/pligos/public/">
+    <h2 style="color: white !important;font-size: 2.0rem">Pligos Documentation</h2>
+  
+</a>
+
+    </div>
+    
+        <div class="searchbox">
+    <label for="search-by"><i class="fas fa-search"></i></label>
+    <input data-search-input id="search-by" type="search" placeholder="Search...">
+    <span data-search-clear=""><i class="fas fa-times"></i></span>
+</div>
+
+<script type="text/javascript" src="/pligos/public/js/lunr.min.js?1570791917"></script>
+<script type="text/javascript" src="/pligos/public/js/auto-complete.js?1570791917"></script>
+<script type="text/javascript">
+    
+        var baseurl = "\/pligos\/public\/";
+    
+</script>
+<script type="text/javascript" src="/pligos/public/js/search.js?1570791917"></script>
+
+    
+  </div>
+
+    <div class="highlightable">
+    <ul class="topics">
+
+        
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/pligos/public/motivation/" title="Motivation" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/pligos/public/motivation/">
+          Motivation
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/pligos/public/basics/" title="Basics" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/pligos/public/basics/">
+          Basics
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/pligos/public/getting-started/" title="Getting Started" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/pligos/public/getting-started/">
+          Getting Started
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/pligos/public/pligos-components/" title="Pligos Components" class="dd-item 
+        parent
+        
+        
+        ">
+      <a href="/pligos/public/pligos-components/">
+          Pligos Components
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+ 
+  
+    
+    <li data-nav-id="/pligos/public/pligos-components/schema/" title="Schema Compiler" class="dd-item 
+        parent
+        active
+        
+        ">
+      <a href="/pligos/public/pligos-components/schema/">
+          Schema Compiler
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+    <li data-nav-id="/pligos/public/pligos-components/types/" title="Types" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/pligos/public/pligos-components/types/">
+          Types
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+    <li data-nav-id="/pligos/public/pligos-components/file-structure/" title="File Structure" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/pligos/public/pligos-components/file-structure/">
+          File Structure
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/pligos/public/example/" title="Example" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/pligos/public/example/">
+          Example
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+         
+    </ul>
+
+    
+    
+      <section id="shortcuts">
+        <h3>More</h3>
+        <ul>
+          
+              <li> 
+                  <a class="padding" href="https://github.com/real-digital/pligos"><i class='fab fa-github'></i> Github repo</a>
+              </li>
+          
+        </ul>
+      </section>
+    
+
+    
+    <section id="footer">
+      <p>Built with <a href="https://github.com/matcornic/hugo-theme-learn"><i class="fas fa-heart"></i></a> from <a href="https://getgrav.org">Grav</a> and <a href="https://gohugo.io/">Hugo</a></p>
+
+    </section>
+  </div>
+</nav>
+
+
+
+
+
+        <section id="body">
+        <div id="overlay"></div>
+        <div class="padding highlightable">
+              
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            <a href='/pligos/public/'>Pligos Documentation</a> > <a href='/pligos/public/pligos-components/'>Pligos Components</a> > Schema Compiler
+          
+         
+          
+         
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#use-of-repeated-instance">Use of <code>repeated</code> instance</a></li>
+<li><a href="#use-of-mapped-instance">Use of <code>mapped</code> instance</a></li>
+<li><a href="#use-of-embedded-instance">Use of <code>embedded</code> instance</a></li>
+<li><a href="#use-of-embedded-mapped-instance">Use of <code>embedded mapped</code> instance</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
+        <div id="head-tags">
+        
+        </div>
+        
+        <div id="body-inner">
+          
+            <h1>
+              
+              Schema Compiler
+            </h1>
+          
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+<p>Pligos heavily relies on yaml configurations. In order to compile one set of configurations into different contexts (for example CI,dev,prod) pligos comes with it&rsquo;s own simple schema language to describe the context. The idea is to create a single helm starter that supports a big set of your services. Services then differ only in their templating input (given in <code>pligos.yaml</code> file).</p>
+
+<p>Pligos supports the following basic types: <code>string, numeric, bool, object.</code> Example:</p>
+
+<pre><code># schema.yaml
+context:
+  pullPolicy: string
+  useTLS: bool
+  applicationConfig: object
+  podInstances: numeric
+</code></pre>
+
+<p><code>contexts</code>, <code>flavor</code> and <code>spec</code> are reserved words in following pligos.yaml. You need to provide your schema configuration under <code>spec</code>.</p>
+
+<pre><code># example/pligos.yaml -- this is your actual service configuration, define this for all your services individually
+contexts:
+  dev:
+    # Path to flavor folder that contains schema.yaml and templates folder
+    flavor: ./flavor
+    spec:
+      pullPolicy: Always
+      useTLS: true
+      applicationConfig:
+        fixture:
+          user: &quot;John Doe&quot;
+          balance: &quot;10$&quot;
+      podInstances: 1
+</code></pre>
+
+<pre><code># example/values.yaml -- this file will be generated by pligos
+pullPolicy: &quot;Always&quot;
+useTLS: true
+applicationConfig:
+  fixture:
+    user: &quot;John Doe&quot;
+    balance: &quot;10$&quot;
+podInstances: 1
+</code></pre>
+
+<p>As mentioned above pligos allows defining different contexts (dev, prod, &hellip;). Each context needs to be set under the <code>contexts</code> property in the service configuration.</p>
+
+<pre><code># schema.yaml -- the schema definition for the dev context
+context:
+  environment: string
+  srcPath: string
+</code></pre>
+
+<pre><code># example/pligos.yaml
+contexts:
+  dev:
+    flavor: ./flavor
+    spec:
+      environment: dev
+      srcPath: /home/johndoe/dev/src/
+  prod:
+    flavor: ./flavor
+    spec:
+      environment: prod
+      srcPath: /home/johndoe/prod/src/
+</code></pre>
+
+<p>Then running the pligos for <code>prod</code> will generate the following <code>values.yaml</code></p>
+
+<pre><code># example/values.yaml -- this file will be generated by pligos
+environment: prod
+srcPath: /home/johndoe/prod/src/
+</code></pre>
+
+<p>However the true power of pligos comes through custom types, which can be instantiated and composed in the configuration.</p>
+
+<pre><code># schema.yaml
+route:
+  port: string
+
+container:
+  route: route
+
+context:
+  container: container
+</code></pre>
+
+<pre><code># example/pligos.yaml
+
+contexts:
+  dev:
+    flavor: ./flavor
+    spec:
+      container: gowebservice
+    
+values:
+  route:
+   - name: http
+     port: 80
+
+  container:
+   - name: gowebservice
+     route: http
+</code></pre>
+
+<pre><code># helmcharts/example/values.yaml
+container:
+  route:
+    port: 80
+</code></pre>
+
+<p>Notice that in the configuration, the instances are referenced by their name. <code>name</code> is a special property in pligos which is used for referencering configuration instances (such as the gowebservice container) and <code>mapped types</code>. More to <code>mapped types</code> later.</p>
+
+<p>Additionally the language supports the meta types <code>repeated</code>, <code>mapped</code>, <code>embedded</code> and <code>embedded mapped</code> which can be applied to any custom, or basic types. Let&rsquo;s start with an example for <code>repeated</code> instances.</p>
+
+<h4 id="use-of-repeated-instance">Use of <code>repeated</code> instance</h4>
+
+<pre><code># schema.yaml
+container:
+  name: string
+  command: repeated string
+
+context:
+  container: repeated container
+</code></pre>
+
+<pre><code># example/pligos.yaml
+contexts:
+  dev:
+    flavor: ./flavor
+    spec:
+      container: [&quot;nginx&quot;, &quot;php&quot;]
+
+values:
+  container:
+   - name: nginx
+     command: [&quot;nginx&quot;]
+   - name: php
+     command: [&quot;php-fpm&quot;]
+
+</code></pre>
+
+<pre><code># examples/values.yaml
+container:
+ - name: nginx
+   command:
+    - nginx
+ - name: php
+   command:
+    - php-fpm
+</code></pre>
+
+<p>Repeated allows specifying a list of any type. In the example we have a list of container, as well as a property <code>command</code> which is a list of <code>string</code>.</p>
+
+<h4 id="use-of-mapped-instance">Use of <code>mapped</code> instance</h4>
+
+<p>Next, Pligos also allows you to define maps.</p>
+
+<pre><code># schema.yaml
+route:
+  name: string
+  port: string
+  containerPort: string
+
+context:
+  routes: mapped route
+</code></pre>
+
+<pre><code># example/pligos.yaml
+contexts:
+  dev:
+    flavor: ./flavor
+    spec:
+      routes: [&quot;http&quot;]
+
+values:
+  route:
+   - name: http
+     port: 80
+     containerPort: 8080
+
+</code></pre>
+
+<pre><code># example/values.yaml
+routes:
+  http:
+    port: 80
+    containerPort: 8080
+</code></pre>
+
+<p>Notice that, although the configuration defines an array of routes, pligos yields a map, as shown in the the output. Maps can be created using the <code>mapped</code> meta type.</p>
+
+<h4 id="use-of-embedded-instance">Use of <code>embedded</code> instance</h4>
+
+<p>Up until this point all custom types appeared under some key in the output. However, this is not always the desired behavior. In order to embed the types&rsquo; properties into the parent <code>embedded</code> types can be used.</p>
+
+<pre><code># schema.yaml
+rawValues:
+  values: embedded object
+
+context:
+  rawValues: embedded rawValues
+</code></pre>
+
+<pre><code># example/pligos.yaml
+contexts:
+  dev:
+    flavor: ./flavor
+    spec:
+      rawValues: devenvironment
+
+values:
+  rawValues:
+   - name: devenvironment
+     values:
+       mysql:
+         user: testuser
+         password: asdf
+</code></pre>
+
+<pre><code># example/values.yaml
+mysql:
+  user: testuser
+  password: asdf
+</code></pre>
+
+<h4 id="use-of-embedded-mapped-instance">Use of <code>embedded mapped</code> instance</h4>
+
+<p>Similarly the instance can be embedded using any arbitrary key using <code>embedded mapped</code> types.</p>
+
+<pre><code># schema.yaml
+dependency:
+  port: string
+  hostname: string
+
+context:
+  dependencies: embedded mapped dependency
+</code></pre>
+
+<pre><code># example/pligos.yaml
+contexts:
+  dev:
+    flavor: ./flavor
+    spec:
+      dependencies: [&quot;mysql&quot;]
+    
+values:
+  dependency:
+   - name: mysql
+     port: 3306
+     hostname: mysql
+</code></pre>
+
+<pre><code># example/values.yaml
+mysql:
+  port: 3306
+  hostname: mysql
+</code></pre>
+
+<p>Just as with <code>mapped</code> types, the name property is used to embedd the type instance into the parent.</p>
+
+
+
+
+
+<footer class=" footline" >
+	
+</footer>
+
+        
+        </div> 
+        
+
+      </div>
+
+    <div id="navigation">
+        
+        
+        
+        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+        
+        
+
+
+	 
+	 
+		
+			<a class="nav nav-prev" href="/pligos/public/pligos-components/" title="Pligos Components"> <i class="fa fa-chevron-left"></i></a>
+		
+		
+			<a class="nav nav-next" href="/pligos/public/pligos-components/types/" title="Types" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+		
+	
+    </div>
+
+    </section>
+    
+    <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
+      <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
+    </div>
+    <script src="/pligos/public/js/clipboard.min.js?1570791917"></script>
+    <script src="/pligos/public/js/perfect-scrollbar.min.js?1570791917"></script>
+    <script src="/pligos/public/js/perfect-scrollbar.jquery.min.js?1570791917"></script>
+    <script src="/pligos/public/js/jquery.sticky.js?1570791917"></script>
+    <script src="/pligos/public/js/featherlight.min.js?1570791917"></script>
+    <script src="/pligos/public/js/highlight.pack.js?1570791917"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="/pligos/public/js/modernizr.custom-3.6.0.js?1570791917"></script>
+    <script src="/pligos/public/js/learn.js?1570791917"></script>
+    <script src="/pligos/public/js/hugo-learn.js?1570791917"></script>
+
+    <link href="/pligos/public/mermaid/mermaid.css?1570791917" rel="stylesheet" />
+    <script src="/pligos/public/mermaid/mermaid.js?1570791917"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    
+
+  </body>
+</html>
