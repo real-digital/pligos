@@ -61,3 +61,12 @@ func Test_compile_b(t *testing.T) {
 
 	testCompile(schemaYaml, pligosYaml, resultYaml, t)
 }
+
+// tests 'embedded repeated' type
+func Test_c(t *testing.T) {
+	schemaYaml := MustAsset("testdata/c/schema.yaml")
+	pligosYaml := MustAsset("testdata/c/pligos.yaml")
+	resultYaml := MustAsset("testdata/c/result.yaml")
+
+	testCompile(schemaYaml, pligosYaml, resultYaml, t)
+}

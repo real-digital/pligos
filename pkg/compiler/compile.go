@@ -64,6 +64,22 @@ func (ve *Compiler) compile(schema map[string]interface{}, config map[string]int
 			continue
 		}
 
+		if typEmbeddedRepeated, ok := isOfType(typ, embeddedRepeated); ok {
+			cs, err := ve.resolveConfigs(config[k], typEmbeddedRepeated)
+			if err != nil {
+				return nil, err
+			}
+
+			for _, e := range cs {
+				n, err := ve.nextConfig(e, typEmbeddedRepeated)
+				if err != nil {
+					return nil, err
+				}
+				res = ve.embed(res, n)
+			}
+			continue
+		}
+
 		if typEmbeddedMapped, ok := isOfType(typ, embeddedMapped); ok {
 			cs, err := ve.resolveConfigs(config[k], typEmbeddedMapped)
 			if err != nil {
@@ -252,10 +268,11 @@ func isPrimitive(t interface{}) bool {
 }
 
 const (
-	repeated       = specialType("repeated")
-	mapped         = specialType("mapped")
-	embedded       = specialType("embedded")
-	embeddedMapped = specialType("embedded mapped")
+	repeated         = specialType("repeated")
+	mapped           = specialType("mapped")
+	embedded         = specialType("embedded")
+	embeddedMapped   = specialType("embedded mapped")
+	embeddedRepeated = specialType("embedded repeated")
 )
 
 type specialType string
