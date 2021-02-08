@@ -3,6 +3,7 @@ module realcloud.tech/pligos
 require (
 	github.com/spf13/cobra v0.0.5
 	github.com/stretchr/testify v1.4.0
+	github.com/tmthrgd/go-bindata v0.0.0-20190904063317-a4b65675e0fb
 	gopkg.in/yaml.v2 v2.2.4
 	helm.sh/helm/v3 v3.0.0
 )

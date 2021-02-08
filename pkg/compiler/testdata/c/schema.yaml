@@ -1,0 +1,5 @@
+configuration:
+  values: embedded object
+
+context:
+  configurations: embedded repeated configuration

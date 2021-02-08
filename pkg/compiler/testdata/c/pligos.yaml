@@ -1,0 +1,11 @@
+configuration:
+  - name: configA
+    values:
+      a: a
+  - name: configB
+    values:
+      b: b
+
+contexts:
+  base:
+    configurations: [configA, configB]
